@@ -137,7 +137,7 @@
         </div>
 
         <p class="slide-text">
-          The domain model defines the epicenter—the <em>behaviors and nouns</em> of your business.<br>
+          The domain model defines the epicenter — the <em>behaviors and nouns</em> of your business.<br>
           Roles and traits extend outward as concern modules.
         </p>
       </div>
@@ -158,17 +158,25 @@
         <div class="code-container">
           <span class="code-filename">app/models/card.rb</span>
           <pre class="code-block"><code class="language-ruby">class Card < ApplicationRecord
-  include Assignable, Closeable, Golden, Postponable,
-    Searchable, Taggable, Triageable, Watchable
+  include Broadcastable, Eventable, Golden, Searchable, Stallable
 
   belongs_to :board
-  belongs_to :creator, class_name: "User"
+  belongs_to :creator, class_name: "User", default: -> { Current.user }
 
-  has_many :comments, dependent: :destroy
   has_rich_text :description
 
-  scope :golden, -> { joins(:goldness) }
-  scope :latest, -> { order(last_active_at: :desc) }
+  scope :chronologically, -> { order created_at: :asc, id: :asc  }
+
+  def to_param
+    number.to_s
+  end
+
+  def move_to(new_board)
+    transaction do
+      card.update! board: new_board
+      card.events.update_all board_id: new_board.id
+    end
+  end
 end</code></pre>
         </div>
 
