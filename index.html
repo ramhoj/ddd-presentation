@@ -46,19 +46,19 @@
             <h2 class="slide-title">Nicklas Ramhöj Holtryd</h2>
             <p class="about-bio" style="margin-bottom: 1rem;">
               I'm the new developer on the product team in Gothenburg.
-              Prior to joining Teamtailor, I spent three years at <strong>37signals</strong> working
+              Prior to joining Teamtailor three weeks ago, I spent three years at <strong>37signals</strong> working
               on <strong>Basecamp</strong> and <strong>HEY</strong>.
             </p>
             <p class="about-bio" style="margin-bottom: 1rem;">
               37signals have a lot of strong preferences when it comes to code design and some of you might have seen
-              Jorge Manrubia talk about it in his <a href="https://www.youtube.com/watch?v=dvPXFnX60cg">Fizzy presentation recently</a>.
+              Jorge Manrubia talk about it in his <a href="https://www.youtube.com/watch?v=dvPXFnX60cg">Fizzy presentation</a> recently.
             </p>
             <p class="about-bio" style="margin-bottom: 1rem;">
               I wanted to take the opportunity to share some of these ideas for those who haven't had a chance to watch Jorge's presentation yet,
               as well as trying to answer any questions you might have from watching it.
             </p>
             <p class="about-bio" style="margin-bottom: 1rem;">
-              Finally, I'm very eager to learn more about Teamtailor's code design philosophy, how it differs from 37signals, and what we can learn from each other
+              Finally, I'm very eager to learn more about Teamtailor's code design philosophy, how it differs from 37signals', and what we can learn from each other
               in an effort to make the code we write together at Teamtailor even better.
             </p>
           </div>
@@ -82,15 +82,15 @@
 
         <div class="ddd-principles">
           <div class="ddd-principle">
-            <span class="ddd-principle-icon">💬</span>
-            <h3>Ubiquitous Language</h3>
-            <p>Code uses the same terms as the business. If users "gild" a card, the code says <code>card.gild</code>.</p>
-          </div>
-
-          <div class="ddd-principle">
             <span class="ddd-principle-icon">🧠</span>
             <h3>Rich Domain Models</h3>
             <p>Models contain behavior, not just data. They represent real business concepts.</p>
+          </div>
+
+          <div class="ddd-principle">
+            <span class="ddd-principle-icon">💬</span>
+            <h3>Ubiquitous Language</h3>
+            <p>Code uses the same terms as the business. If users "gild" a card, the code says <code>card.gild</code>.</p>
           </div>
 
           <div class="ddd-principle">
@@ -99,6 +99,10 @@
             <p>Everything else—controllers, jobs, APIs—orchestrates the domain. The domain is the core.</p>
           </div>
         </div>
+
+        <p class="speaker-notes">
+          So, Jorge mentions DDD in his video. DDD comes down to three core ideas: rich domain models, ubiquitous language, and domain at the center. In the next slides I'll get to some examples what this ment in practicve at 37signals.
+        </p>
       </div>
 
       <nav class="slide-nav">
@@ -132,16 +136,18 @@
          ================================================================ -->
     <section class="slide slide--dark" id="domain-center">
       <div class="slide-inner">
-        <h2 class="slide-title">The Epicenter Philosophy</h2>
+        <h2 class="slide-title">The Epicenter</h2>
 
         <p class="slide-text" style="margin-bottom: 2rem;">
-          In ShapeUp we start with the epicenter and work our way out.<br>
-          We can apply the same philosophy to code organization.
+          DDD and ShapeUp share the same technique of starting with the epicenter and working our way out.
+          When organizing our code we place our domain model in the center and build outwards.
+          From there roles and traits can be extend outward as concern modules, utilizing object composition when necessary.
         </p>
 
-        <p class="slide-text">
-          The domain model defines our epicenter — the <em>behaviors and nouns</em> of our business.<br>
-          Roles and traits extend outward as concern modules, utilizing object composition when necessary.
+        <p class="speaker-notes">
+          Domain driven design and ShapeUp share the same technique of starting with the epicenter and working our way out.
+          When organizing our code we place our domain model in the center and build outwards.
+          From there roles and traits can be extend outward as concern modules, utilizing object composition when necessary.
         </p>
       </div>
 
@@ -186,6 +192,15 @@ end</code></pre>
         <p class="slide-text">
           Concerns organize traits and roles. The model stays readable and coherent.
         </p>
+
+        <p class="speaker-notes">
+          So this is the Card model from Fizzy.
+          The Card is a central entity so it has a lot going on, thanks to Concerns we can still grasp it easily though.
+          Each Concern defines a specific trait.
+          Golden means it can be gilded, Stallable tracks activity spikes and so on.
+          The model itself stays focused on what's define the code of the model: associations, scopes, and a few key methods.
+          You can open this file and immediately understand what a Card is and does.
+        </p>
       </div>
 
       <nav class="slide-nav">
@@ -223,10 +238,19 @@ end</code></pre>
     goldness&.destroy
   end
 end</code></pre>
+          <p class="slide-text">
+            Things that belong together, live together. Easy to understand, easy to maintain, minimal distractions.
+          </p>
         </div>
 
-        <p class="slide-text">
-          Things that belong together, live together. Easy to understand, easy to maintain, minimal distractions.
+
+        <p class="speaker-notes">
+          Here's what one of those concerns looks like inside.
+          Everything about gilding lives in this one file—the association, the scope, the methods.
+          If I need to change how gilding works, I go to one place.
+          Jorge talks about this a lot: things that belong together should live together.
+          It's also nice how readable the methods are—golden?, gild, ungild.
+          That's the ubiquitous language pilar in action.
         </p>
       </div>
 
@@ -247,7 +271,7 @@ end</code></pre>
       <div class="slide-inner">
         <p class="chapter-label">Chapter 2</p>
         <h2 class="slide-title slide-title--large">Focus on intent, not implementation</h2>
-        <p class="slide-subtitle">Code that reads like prose, not like a computer science textbook</p>
+        <p class="slide-subtitle">Code that reads more like prose, than a computer science textbook</p>
       </div>
 
       <nav class="slide-nav">
@@ -284,7 +308,11 @@ class Card::SendBackToTriageService
   end
 
   def call
-    @card.send_back_to_triage
+    @card.transaction do
+      @card.resume
+      @card.update! column: nil
+      @card.track_event :sent_back_to_triage
+    end
   end
 end</code></pre>
                 </div>
@@ -295,6 +323,17 @@ end</code></pre>
                 <div class="code-container">
                   <pre class="code-block"><code class="language-ruby"># In the controller
 card.send_back_to_triage
+
+module Card::Triageable
+  def send_back_to_triage
+    transaction do
+      resume
+      update! column: nil
+      track_event :sent_back_to_triage
+    end
+  end
+end
+
 </code></pre>
                 </div>
                 <p class="slide-text" style="margin-top: 1rem; font-size: 1rem;">
@@ -331,7 +370,6 @@ end</code></pre>
   include ActiveModel::Model
 
   attr_accessor :full_name, :identity
-
   validates :full_name, :identity, presence: true
 
   def complete
@@ -351,6 +389,19 @@ end</code></pre>
             </p>
           </div>
         </div>
+
+        <p class="speaker-notes">
+          Jorge explains how wrapping a single line in a service object adds a lot of distracting boilerplate.
+          I'd like to think that most people would agree with this simple example so I wanted make it more interessting by including the implemnation for comparison.
+          <br><br>
+          On the left we see a lot of feature envy and uncessary cermony to initialize the service object. We add noise without value by expliclity refering
+          to the object as a service and call `call` on it.
+          <br><br>
+          On the right we see the method directly on the model. There's no feature envy here which allows us as reader to focus on intent rather than syntax.
+          <br><br>
+          There are still good examples on when a Controller might want to delegate orchestration to a service object.
+          In this example we use a form object to coordinate multiple things to keep the controller slim and focused on the bigger picture.
+        </p>
       </div>
 
       <nav class="slide-nav">
@@ -381,7 +432,12 @@ end</code></pre>
 
         <p class="slide-text" style="margin-top: 2rem;">
           Generic verbs like <code>call</code> and <code>execute</code> say nothing about intent, they don't add value or information.<br>
-          Domain methods read like prose: <em>"Is the card gilded?"</em>, <em>"Gild the card."</em>
+          Domain methods read like prose:<em>"Gild the card."</em>, <em>"Resume the card."</em>.
+        </p>
+
+        <p class="speaker-notes">
+          This is another example of something Jorge mentions—they don't use the word "service" and they avoid methods names like `call` or `execute`.
+          When we compare `CardGildingService.call(card)` versus `card.gild` it is easy to see how the second one reads like English prose where as the first one is focused on the implementation.
         </p>
       </div>
 
@@ -471,6 +527,13 @@ end</code></pre>
           </p>
         </div>
 
+        <p class="speaker-notes">
+          Controllers connect our domain models with the external world.
+          In much the same way, jobs act as a thin layer of orchestration for our domain logic.
+          Jorge makes this point that controllers and jobs are already doing what service objects do.
+          They orchestrate.
+          The difference is they're built into Rails and most of the ceremony has been extractred away by the framework.
+        </p>
       </div>
 
       <nav class="slide-nav">
@@ -509,6 +572,11 @@ end</code></pre>
         <p class="slide-text">
           The concern organizes the API. The <code>Detector</code> object takes care of detection details.<br>
           Concerns don't replace object-oriented design—they complement it.
+        </p>
+
+        <p class="speaker-notes">
+          Jorge shows how concerns and object composition works great together.
+          The concern gives you a natural API to work where you don't have to know about complexity that might or might not be abstracted by an underlaying object.
         </p>
       </div>
 
