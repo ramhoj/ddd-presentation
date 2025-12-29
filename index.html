@@ -427,7 +427,7 @@ end</code></pre>
         <div class="code-tabs">
           <div class="code-tabs-nav">
             <button class="code-tab active" data-tab="controller">app/controllers/cards/closures_controller.rb</button>
-            <button class="code-tab" data-tab="job">app/jobs/detect_activity_spikes_job.rb</button>
+            <button class="code-tab" data-tab="job">app/jobs/card/activity_spike/detection_job.rb</button>
           </div>
 
           <div class="code-tab-content active" id="tab-controller">
@@ -445,7 +445,7 @@ end</code></pre>
           </div>
 
           <div class="code-tab-content" id="tab-job">
-            <pre class="code-block"><code class="language-ruby">class DetectActivitySpikesJob < ApplicationJob
+            <pre class="code-block"><code class="language-ruby">class Card::ActivitySpike::DetectionJob < ApplicationJob
   def perform(card)
     card.detect_activity_spikes
   end
