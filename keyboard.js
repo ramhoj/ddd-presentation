@@ -4,16 +4,22 @@ document.addEventListener('keydown', (e) => {
     navigate(1)
   } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
     navigate(-1)
+  } else if (e.key >= '1' && e.key <= '9') {
+    goToSlide(parseInt(e.key, 10))
+  } else if (e.key === '0') {
+    goToSlide(10)
   }
 })
 
 function navigate(direction) {
   const current = getCurrentSlide()
-  const next = current + direction
+  goToSlide(current + direction)
+}
+
+function goToSlide(n) {
   const total = document.querySelectorAll('.slide').length
-  
-  if (next >= 1 && next <= total) {
-    window.location.hash = `slide-${next}`
+  if (n >= 1 && n <= total) {
+    window.location.hash = `slide-${n}`
   }
 }
 
