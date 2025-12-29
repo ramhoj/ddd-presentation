@@ -562,6 +562,66 @@ body:has(.slide:target) .slide:not(:target) {
 }
 
 /* =============================================================================
+   CODE TABS
+   ============================================================================= */
+
+.code-tabs {
+  width: 100%;
+  max-width: 700px;
+  margin: var(--space-lg) auto;
+  text-align: left;
+}
+
+.code-tabs-nav {
+  display: flex;
+  gap: 2px;
+}
+
+.code-tab {
+  background: var(--tt-grey-78);
+  color: var(--tt-grey-43);
+  border: none;
+  padding: var(--space-sm) var(--space-md);
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 0.8rem;
+  cursor: pointer;
+  border-radius: 8px 8px 0 0;
+  transition: all 0.2s ease;
+}
+
+.code-tab:hover {
+  background: var(--tt-grey-64);
+  color: var(--tt-grey-13);
+}
+
+.code-tab.active {
+  background: var(--tt-grey-84);
+  color: var(--tt-grey-13);
+  border: 1px solid var(--tt-grey-78);
+  border-bottom: 1px solid var(--tt-grey-84);
+  position: relative;
+  z-index: 1;
+}
+
+.code-tab-content {
+  display: none;
+  background: var(--tt-grey-84);
+  border: 1px solid var(--tt-grey-78);
+  border-radius: 0 8px 8px 8px;
+  margin-top: -1px;
+}
+
+.code-tab-content.active {
+  display: block;
+}
+
+.code-tab-content .code-block {
+  border: none;
+  border-radius: 0 8px 8px 8px;
+  margin: 0;
+}
+
+/* =============================================================================
    COMPARISON LAYOUT
    ============================================================================= */
 

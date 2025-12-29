@@ -42,4 +42,28 @@ function getCurrentSlideIndex(slides) {
 document.addEventListener('DOMContentLoaded', () => {
   const total = document.querySelectorAll('.slide').length
   document.documentElement.style.setProperty('--total-slides', `"${total}"`)
+  
+  // Initialize code tabs
+  initCodeTabs()
 })
+
+// Code tabs switching
+function initCodeTabs() {
+  document.querySelectorAll('.code-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const tabGroup = tab.closest('.code-tabs')
+      const tabId = tab.dataset.tab
+      
+      // Update active tab button
+      tabGroup.querySelectorAll('.code-tab').forEach(t => t.classList.remove('active'))
+      tab.classList.add('active')
+      
+      // Update active content
+      tabGroup.querySelectorAll('.code-tab-content').forEach(c => c.classList.remove('active'))
+      tabGroup.querySelector(`#tab-${tabId}`).classList.add('active')
+      
+      // Re-highlight code
+      Prism.highlightAllUnder(tabGroup)
+    })
+  })
+}
