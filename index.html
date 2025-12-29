@@ -23,14 +23,7 @@
     <section class="slide slide--gradient" id="title">
       <div class="slide-inner">
         <h1 class="slide-title slide-title--large">The Domain<br>at the Center</h1>
-        <p class="slide-subtitle">Lessons from 37signals on building maintainable Rails applications</p>
-
-        <div class="author">
-          <div class="author-info">
-            <p class="author-name">Nicklas</p>
-            <p class="author-role">Teamtailor</p>
-          </div>
-        </div>
+        <p class="slide-subtitle">Lessons from 37signals on writing maintainable code that is easy to reason about and beautful to read.</p>
       </div>
 
       <nav class="slide-nav">
@@ -71,20 +64,20 @@
       <div class="slide-inner">
         <h2 class="slide-title">Domain-Driven Design</h2>
         <p class="slide-subtitle" style="margin-bottom: 2.5rem;">A philosophy for structuring complex software, coined by Eric Evans in 2003</p>
-        
+
         <div class="ddd-principles">
           <div class="ddd-principle">
             <span class="ddd-principle-icon">💬</span>
             <h3>Ubiquitous Language</h3>
             <p>Code uses the same terms as the business. If users "gild" a card, the code says <code>card.gild</code>.</p>
           </div>
-          
+
           <div class="ddd-principle">
             <span class="ddd-principle-icon">🧠</span>
             <h3>Rich Domain Models</h3>
             <p>Models contain behavior, not just data. They represent real business concepts.</p>
           </div>
-          
+
           <div class="ddd-principle">
             <span class="ddd-principle-icon">🎯</span>
             <h3>Domain at the Center</h3>
@@ -117,23 +110,28 @@
     </section>
 
     <!-- ================================================================
-         Domain at the Center
+         Domain at the Center (Epicenter Philosophy)
          ================================================================ -->
     <section class="slide slide--dark" id="domain-center">
       <div class="slide-inner">
-        <h2 class="slide-title">Placing the domain model at the center</h2>
+        <h2 class="slide-title">Rich domain objects</h2>
+
+        <p class="slide-text" style="margin-bottom: 2rem;">
+          In ShapeUp we start with the epicenter and work our way out.<br>
+          We can apply the same philosophy to code organization.
+        </p>
 
         <div class="diagram">
-          <div class="diagram-box">Controllers</div>
+          <div class="diagram-box">Concerns</div>
           <span class="diagram-arrow">→</span>
-          <div class="diagram-box diagram-box--primary">Domain Models</div>
+          <div class="diagram-box diagram-box--primary">Domain Model</div>
           <span class="diagram-arrow">←</span>
-          <div class="diagram-box">Jobs</div>
+          <div class="diagram-box">Concerns</div>
         </div>
 
         <p class="slide-text">
-          The domain model captures the <em>behaviors and nouns</em> of your business.<br>
-          Everything else orchestrates it.
+          The domain model defines the epicenter—the <em>behaviors and nouns</em> of your business.<br>
+          Roles and traits extend outward as concern modules.
         </p>
       </div>
 
@@ -312,38 +310,6 @@ end</code></pre>
 
       <nav class="slide-nav">
         <a href="#code-controller" class="nav-link">←</a>
-        <a href="#epicenter" class="nav-link">→</a>
-      </nav>
-    </section>
-
-    <!-- ================================================================
-         Epicenter Philosophy
-         ================================================================ -->
-    <section class="slide slide--pattern" id="epicenter">
-      <div class="slide-inner">
-        <h2 class="slide-title">The Epicenter Philosophy</h2>
-
-        <p class="slide-text" style="margin-bottom: 2rem;">
-          In ShapeUp we start with the epicenter and work our way out.<br>
-          37signals applies the same philosophy to code organization:
-        </p>
-
-        <div class="diagram">
-          <div class="diagram-box">Concerns</div>
-          <span class="diagram-arrow">→</span>
-          <div class="diagram-box diagram-box--primary">Domain Model</div>
-          <span class="diagram-arrow">←</span>
-          <div class="diagram-box">Concerns</div>
-        </div>
-
-        <p class="slide-text">
-          The domain object defines the epicenter.<br>
-          Roles and traits extend outward as concern modules.
-        </p>
-      </div>
-
-      <nav class="slide-nav">
-        <a href="#code-plain-ruby" class="nav-link">←</a>
         <a href="#takeaways" class="nav-link">→</a>
       </nav>
     </section>
