@@ -441,6 +441,7 @@ body:has(.slide:target) .slide:not(:target) {
 .about-text .slide-title {
   text-align: left;
   margin-bottom: var(--space-md);
+  white-space: nowrap;
 }
 
 .about-bio {
@@ -470,15 +471,16 @@ body:has(.slide:target) .slide:not(:target) {
     flex-direction: column-reverse;
     text-align: center;
   }
-  
+
   .about-text {
     text-align: center;
   }
-  
+
   .about-text .slide-title {
     text-align: center;
+    white-space: normal;
   }
-  
+
   .profile-photo {
     width: 150px;
     height: 150px;
