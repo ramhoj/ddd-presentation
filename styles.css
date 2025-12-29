@@ -382,6 +382,82 @@ body:has(.slide:target) .slide:not(:target) {
   font-size: 1.5rem;
 }
 
+/* Model Card Visual */
+.model-visual {
+  display: flex;
+  justify-content: center;
+  margin: var(--space-xl) 0;
+}
+
+.model-card {
+  background: var(--tt-grey-84);
+  border: 2px solid var(--tt-grey-64);
+  border-radius: 16px;
+  padding: var(--space-lg) var(--space-xl);
+  min-width: 320px;
+  text-align: center;
+  position: relative;
+}
+
+.model-name {
+  display: block;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--tt-primary);
+  margin-bottom: var(--space-md);
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+}
+
+.model-traits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  justify-content: center;
+  margin-bottom: var(--space-lg);
+}
+
+.trait-badge {
+  background: var(--tt-primary);
+  color: var(--tt-white);
+  padding: 0.3em 0.7em;
+  border-radius: 100px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+}
+
+.trait-badge--faded {
+  background: var(--tt-grey-64);
+  color: var(--tt-grey-31);
+}
+
+.model-compositions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--tt-grey-64);
+}
+
+.composition-label {
+  font-size: 0.8rem;
+  color: var(--tt-grey-43);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.composition-item {
+  background: var(--tt-grey-78);
+  color: var(--tt-grey-13);
+  padding: 0.25em 0.6em;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  border: 1px solid var(--tt-grey-64);
+}
+
 .badge {
   display: inline-block;
   background: var(--tt-primary);
