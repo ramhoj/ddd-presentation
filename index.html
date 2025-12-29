@@ -49,7 +49,7 @@
             <h2 class="slide-title">Nicklas Ramhöj Holtryd</h2>
             <p class="about-bio">
               I'm a developer at <strong>Teamtailor</strong>, based in Gothenburg, Sweden.
-              Before joining here, I spent three years at <strong>37signals</strong> working
+              Prior to joining Teamtailor, I spent three years at <strong>37signals</strong> working
               on <strong>Basecamp</strong> and <strong>HEY</strong>—where I picked up some ideas about code design that
               I'd like to share with you today.
             </p>
@@ -60,6 +60,41 @@
 
       <nav class="slide-nav">
         <a href="#title" class="nav-link">←</a>
+        <a href="#what-is-ddd" class="nav-link">→</a>
+      </nav>
+    </section>
+
+    <!-- ================================================================
+         What is DDD?
+         ================================================================ -->
+    <section class="slide slide--dark" id="what-is-ddd">
+      <div class="slide-inner">
+        <h2 class="slide-title">Domain-Driven Design</h2>
+        <p class="slide-subtitle" style="margin-bottom: 2.5rem;">A philosophy for structuring complex software, coined by Eric Evans in 2003</p>
+        
+        <div class="ddd-principles">
+          <div class="ddd-principle">
+            <span class="ddd-principle-icon">💬</span>
+            <h3>Ubiquitous Language</h3>
+            <p>Code uses the same terms as the business. If users "gild" a card, the code says <code>card.gild</code>.</p>
+          </div>
+          
+          <div class="ddd-principle">
+            <span class="ddd-principle-icon">🧠</span>
+            <h3>Rich Domain Models</h3>
+            <p>Models contain behavior, not just data. They represent real business concepts.</p>
+          </div>
+          
+          <div class="ddd-principle">
+            <span class="ddd-principle-icon">🎯</span>
+            <h3>Domain at the Center</h3>
+            <p>Everything else—controllers, jobs, APIs—orchestrates the domain. The domain is the core.</p>
+          </div>
+        </div>
+      </div>
+
+      <nav class="slide-nav">
+        <a href="#about-me" class="nav-link">←</a>
         <a href="#quote-essence" class="nav-link">→</a>
       </nav>
     </section>
@@ -76,7 +111,7 @@
       </div>
 
       <nav class="slide-nav">
-        <a href="#about-me" class="nav-link">←</a>
+        <a href="#what-is-ddd" class="nav-link">←</a>
         <a href="#domain-center" class="nav-link">→</a>
       </nav>
     </section>

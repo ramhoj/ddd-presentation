@@ -488,6 +488,59 @@ body:has(.slide:target) .slide:not(:target) {
 }
 
 /* =============================================================================
+   DDD PRINCIPLES SLIDE
+   ============================================================================= */
+
+.ddd-principles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-lg);
+  max-width: 1000px;
+  text-align: left;
+}
+
+.ddd-principle {
+  background: var(--tt-grey-78);
+  border-radius: 12px;
+  padding: var(--space-lg);
+  border: 1px solid var(--tt-grey-64);
+}
+
+.ddd-principle-icon {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: var(--space-sm);
+}
+
+.ddd-principle h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 var(--space-sm);
+  color: var(--tt-white);
+}
+
+.ddd-principle p {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--tt-grey-31);
+  margin: 0;
+}
+
+.ddd-principle code {
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  background: var(--tt-grey-84);
+  padding: 0.1em 0.3em;
+  border-radius: 3px;
+  font-size: 0.85em;
+}
+
+@media (max-width: 768px) {
+  .ddd-principles {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =============================================================================
    NAVIGATION - Simple Links
    ============================================================================= */
 
