@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Code Design at the Center</title>
-  
+
   <!-- Teamtailor fonts: Inter -->
   <link rel="preconnect" href="https://rsms.me/">
   <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
-  
+
   <!-- Prism.js for syntax highlighting -->
   <link rel="stylesheet" href="prism-theme.css">
-  
+
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -191,22 +191,25 @@ end</code></pre>
         <h2 class="slide-title">Traits as concerns</h2>
 
         <div class="code-container">
-          <span class="code-filename">app/models/card/triageable.rb</span>
-          <pre class="code-block"><code class="language-ruby">module Card::Triageable
+          <span class="code-filename">app/models/card/golden.rb</span>
+          <pre class="code-block"><code class="language-ruby">module Card::Golden
   extend ActiveSupport::Concern
 
   included do
-    scope :triaged, -> { active.where.not(column: nil) }
+    has_one :goldness, dependent: :destroy
+    scope :golden, -> { joins(:goldness) }
   end
 
-  def triaged?
-    active? && column.present?
+  def golden?
+    goldness.present?
   end
 
-  def send_back_to_triage
-    resume if postponed?
-    update! column: nil
-    track_event :sent_back_to_triage
+  def gild
+    create_goldness! unless golden?
+  end
+
+  def ungild
+    goldness&.destroy
   end
 end</code></pre>
         </div>
@@ -291,8 +294,6 @@ end</code></pre>
             <div class="code-container">
               <pre class="code-block"><code class="language-ruby"># In the controller
 card.send_back_to_triage
-
-
 
 
 # That's it.
@@ -400,42 +401,6 @@ end</code></pre>
 
       <nav class="slide-nav">
         <a href="#chapter-orchestration" class="nav-link">←</a>
-        <a href="#code-plain-ruby" class="nav-link">→</a>
-      </nav>
-    </section>
-
-    <!-- ================================================================
-         Code: Plain Ruby Object
-         ================================================================ -->
-    <section class="slide slide--dark" id="code-plain-ruby">
-      <div class="slide-inner">
-        <h2 class="slide-title">Plain Ruby objects as domain models</h2>
-
-        <div class="code-container">
-          <span class="code-filename">app/models/signup.rb</span>
-          <pre class="code-block"><code class="language-ruby">class Signup
-  include ActiveModel::Model
-  include ActiveModel::Validations
-
-  attr_accessor :full_name, :email_address, :identity
-
-  validates :email_address, format: { with: URI::MailTo::EMAIL_REGEXP }
-
-  def create_identity
-    @identity = Identity.find_or_create_by!(email_address:)
-    @identity.send_magic_link for: :sign_up
-  end
-end</code></pre>
-        </div>
-
-        <p class="slide-text">
-          Not a service. Not persisted. A <em>domain operation</em> with a semantic name.<br>
-          We use ActiveModel, but it's just a plain Ruby object.
-        </p>
-      </div>
-
-      <nav class="slide-nav">
-        <a href="#code-controller" class="nav-link">←</a>
         <a href="#concerns-composition" class="nav-link">→</a>
       </nav>
     </section>
@@ -448,33 +413,41 @@ end</code></pre>
         <h2 class="slide-title">Concerns + object composition</h2>
 
         <p class="slide-text" style="margin-bottom: 2rem;">
-          Some say concerns oppose object-oriented design.<br>
-          In practice, they work beautifully together.
+          Concerns don't replace object-oriented design—they complement it.
         </p>
 
-        <div class="code-container">
-          <span class="code-filename">app/models/concerns/notifiable.rb</span>
-          <pre class="code-block"><code class="language-ruby">module Notifiable
-  extend ActiveSupport::Concern
+        <div class="comparison">
+          <div class="comparison-side">
+            <h3 style="color: var(--tt-white);">The concern organizes behavior</h3>
+            <div class="code-container">
+              <span class="code-filename">app/models/card/golden.rb</span>
+              <pre class="code-block"><code class="language-ruby">has_one :goldness
 
-  included do
-    after_create_commit :notify_recipients_later
-  end
-
-  def notify_recipients_later
-    NotifyRecipientsJob.perform_later(self)
-  end
+def gild
+  create_goldness! unless golden?
 end</code></pre>
+            </div>
+          </div>
+
+          <div class="comparison-side">
+            <h3 style="color: var(--tt-white);">The model holds the data</h3>
+            <div class="code-container">
+              <span class="code-filename">app/models/card/goldness.rb</span>
+              <pre class="code-block"><code class="language-ruby">class Card::Goldness < ApplicationRecord
+  belongs_to :card, touch: true
+end</code></pre>
+            </div>
+          </div>
         </div>
 
         <p class="slide-text" style="margin-top: 1.5rem;">
-          The concern defines <em>when</em> to notify. The job orchestrates <em>how</em>.<br>
+          The concern provides the API. The composed object stores state.<br>
           You're encouraged to use both.
         </p>
       </div>
 
       <nav class="slide-nav">
-        <a href="#code-plain-ruby" class="nav-link">←</a>
+        <a href="#code-controller" class="nav-link">←</a>
         <a href="#takeaways" class="nav-link">→</a>
       </nav>
     </section>
@@ -512,11 +485,11 @@ end</code></pre>
     </section>
 
   </div>
-  
+
   <!-- Prism.js for syntax highlighting -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-ruby.min.js"></script>
-  
+
   <!-- Keyboard navigation -->
   <script src="keyboard.js"></script>
 </body>
