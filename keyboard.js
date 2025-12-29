@@ -45,6 +45,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Initialize code tabs
   initCodeTabs()
+
+  // Run Prism highlighting after DOM is ready
+  if (typeof Prism !== 'undefined') {
+    Prism.highlightAll()
+  }
+})
+
+// Re-highlight code when navigating (hash change)
+window.addEventListener('hashchange', () => {
+  if (typeof Prism !== 'undefined') {
+    // Small delay to ensure the slide is visible
+    setTimeout(() => Prism.highlightAll(), 50)
+  }
 })
 
 // Code tabs switching
