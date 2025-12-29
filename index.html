@@ -255,7 +255,7 @@ end</code></pre>
         <div class="code-tabs">
           <div class="code-tabs-nav">
             <button class="code-tab active" data-tab="simple">Simple: single domain call</button>
-            <button class="code-tab" data-tab="complex">Complex: multi-entity orchestration</button>
+            <button class="code-tab" data-tab="complex">Complex: extracting to a form object</button>
           </div>
 
           <div class="code-tab-content active" id="tab-simple">
@@ -295,33 +295,37 @@ card.send_back_to_triage
           </div>
 
           <div class="code-tab-content" id="tab-complex">
-            <div class="comparison">
-              <div class="comparison-side comparison-side--bad">
-                <h3>With a service object</h3>
+            <div class="complex-example">
+              <div class="complex-example-side">
+                <h3>Controller</h3>
                 <div class="code-container">
-                  <pre class="code-block"><code class="language-ruby">class Board::UpdateService
-  def initialize(board, params, users)
-    @board = board
-    @params = params
-    @users = users
-  end
+                  <pre class="code-block"><code class="language-ruby">class BoardsController < ApplicationController
+  def update
+    @form = Board::Form.new(board: @board, **form_params)
 
-  def call
-    @board.update!(@params)
-    @board.accesses.revise(@users)
+    if @form.save
+      redirect_to @board
+    else
+      render :edit, status: :unprocessable_entity
+    end
   end
 end</code></pre>
                 </div>
               </div>
 
-              <div class="comparison-side comparison-side--good">
-                <h3>With a form object</h3>
+              <div class="complex-example-side">
+                <h3>Form object</h3>
                 <div class="code-container">
                   <pre class="code-block"><code class="language-ruby">class Board::Form
   include ActiveModel::Model
+
   attr_accessor :board, :name, :users
 
+  validates :name, presence: true
+
   def save
+    return false unless valid?
+
     board.update!(name:)
     board.accesses.revise(users)
   end
@@ -330,7 +334,7 @@ end</code></pre>
               </div>
             </div>
             <p class="slide-text" style="margin-top: 1rem; font-size: 1rem;">
-              When coordinating multiple entities, a form object keeps it in the domain—with validation, semantic naming, and no <code>call</code>.
+              When orchestration grows complex, extract it to a form object. It stays in the domain, supports validation, and uses semantic naming.
             </p>
           </div>
         </div>

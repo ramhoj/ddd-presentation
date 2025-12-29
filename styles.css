@@ -747,6 +747,41 @@ body:has(.slide:target) .slide:not(:target) {
 }
 
 /* =============================================================================
+   COMPLEX EXAMPLE (non-comparison side-by-side)
+   ============================================================================= */
+
+.complex-example {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-lg);
+  width: 100%;
+  text-align: left;
+}
+
+.complex-example-side h3 {
+  font-size: 1rem;
+  margin: 0 0 var(--space-sm);
+  font-weight: 600;
+  color: var(--tt-grey-13);
+}
+
+.complex-example-side .code-container {
+  margin: 0;
+}
+
+.complex-example-side .code-block {
+  font-size: 0.8rem;
+  border: 1px solid var(--tt-grey-78);
+  border-radius: 8px;
+}
+
+@media (max-width: 900px) {
+  .complex-example {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =============================================================================
    NAMING EXAMPLES
    ============================================================================= */
 
