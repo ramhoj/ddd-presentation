@@ -533,6 +533,18 @@ body:has(.slide:target) .slide:not(:target) {
   font-weight: 600;
 }
 
+.about-bio a {
+  color: var(--tt-primary);
+  text-decoration: none;
+  border-bottom: 1px solid var(--tt-primary);
+  transition: all 0.2s ease;
+}
+
+.about-bio a:hover {
+  color: var(--tt-primary-light);
+  border-bottom-color: var(--tt-primary-light);
+}
+
 .profile-photo {
   width: 200px;
   height: 200px;
