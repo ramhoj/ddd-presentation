@@ -17,7 +17,7 @@ function navigate(direction) {
   const slides = Array.from(document.querySelectorAll('.slide'))
   const currentIndex = getCurrentSlideIndex(slides)
   const nextIndex = currentIndex + direction
-  
+
   if (nextIndex >= 0 && nextIndex < slides.length) {
     window.location.hash = slides[nextIndex].id
   }
@@ -33,7 +33,7 @@ function goToSlide(n) {
 function getCurrentSlideIndex(slides) {
   const hash = window.location.hash.slice(1)
   if (!hash) return 0
-  
+
   const index = slides.findIndex(slide => slide.id === hash)
   return index === -1 ? 0 : index
 }
