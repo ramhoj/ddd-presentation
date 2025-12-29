@@ -204,7 +204,8 @@ body:has(.slide:target) .slide:not(:target) {
   font-size: clamp(1.1rem, 2vw, 1.35rem);
   line-height: 1.6;
   color: var(--tt-grey-13);
-  margin: 0;
+  margin: var(--space-md) auto 0;
+  max-width: 1000px;
 }
 
 .slide-text em {
