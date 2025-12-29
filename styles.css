@@ -76,6 +76,9 @@ body {
   width: 100vw;
   height: 100vh;
   overflow: hidden;
+  
+  /* CSS Counter for automatic slide numbering */
+  counter-reset: slide;
 }
 
 /* =============================================================================
@@ -93,12 +96,26 @@ body {
   justify-content: center;
   align-items: center;
   padding: var(--space-xl);
-
+  
   /* Hidden by default */
   opacity: 0;
   visibility: hidden;
   transform: translateX(30px);
   transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s;
+  
+  /* Increment counter for each slide */
+  counter-increment: slide;
+}
+
+/* Auto-generated slide counter using CSS counter + JS total */
+.slide::after {
+  content: counter(slide) " / " var(--total-slides);
+  position: absolute;
+  bottom: var(--space-lg);
+  left: var(--space-lg);
+  font-size: 0.9rem;
+  color: var(--tt-grey-43);
+  font-variant-numeric: tabular-nums;
 }
 
 /* First slide visible by default (when no hash) */

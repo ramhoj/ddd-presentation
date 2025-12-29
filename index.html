@@ -4,27 +4,27 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Code Design at the Center</title>
-
+  
   <!-- Teamtailor fonts: Inter -->
   <link rel="preconnect" href="https://rsms.me/">
   <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
-
-  <!-- Prism.js for syntax highlighting (loaded inline, no JS navigation) -->
+  
+  <!-- Prism.js for syntax highlighting -->
   <link rel="stylesheet" href="prism-theme.css">
-
+  
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="presentation">
 
     <!-- ================================================================
-         SLIDE 1: Title
+         Title
          ================================================================ -->
-    <section class="slide slide--gradient" id="slide-1">
+    <section class="slide slide--gradient" id="title">
       <div class="slide-inner">
         <h1 class="slide-title slide-title--large">The Domain<br>at the Center</h1>
         <p class="slide-subtitle">Lessons from 37signals on building maintainable Rails applications</p>
-
+        
         <div class="author">
           <div class="author-info">
             <p class="author-name">Nicklas</p>
@@ -32,18 +32,17 @@
           </div>
         </div>
       </div>
-
+      
       <nav class="slide-nav">
         <span class="nav-disabled">←</span>
-        <a href="#slide-2" class="nav-link">→</a>
+        <a href="#about-me" class="nav-link">→</a>
       </nav>
-      <div class="slide-counter">1 / 11</div>
     </section>
 
     <!-- ================================================================
-         SLIDE 2: About Me
+         About Me
          ================================================================ -->
-    <section class="slide slide--dark" id="slide-2">
+    <section class="slide slide--dark" id="about-me">
       <div class="slide-inner">
         <img src="profile-photo-cropped-3.jpeg" alt="Nicklas Ramhöj Holtryd" class="profile-photo">
         
@@ -58,16 +57,15 @@
       </div>
 
       <nav class="slide-nav">
-        <a href="#slide-1" class="nav-link">←</a>
-        <a href="#slide-3" class="nav-link">→</a>
+        <a href="#title" class="nav-link">←</a>
+        <a href="#quote-essence" class="nav-link">→</a>
       </nav>
-      <div class="slide-counter">2 / 11</div>
     </section>
 
     <!-- ================================================================
-         SLIDE 3: Philosophy Quote
+         Quote: Essence
          ================================================================ -->
-    <section class="slide slide--pattern" id="slide-3">
+    <section class="slide slide--pattern" id="quote-essence">
       <div class="slide-inner">
         <div class="quote">
           <p class="quote-text">We care about reducing solutions to their essence.</p>
@@ -76,16 +74,15 @@
       </div>
 
       <nav class="slide-nav">
-        <a href="#slide-2" class="nav-link">←</a>
-        <a href="#slide-4" class="nav-link">→</a>
+        <a href="#about-me" class="nav-link">←</a>
+        <a href="#domain-center" class="nav-link">→</a>
       </nav>
-      <div class="slide-counter">3 / 11</div>
     </section>
 
     <!-- ================================================================
-         SLIDE 4: Domain at the Center
+         Domain at the Center
          ================================================================ -->
-    <section class="slide slide--dark" id="slide-4">
+    <section class="slide slide--dark" id="domain-center">
       <div class="slide-inner">
         <h2 class="slide-title">Placing the domain model at the center</h2>
 
@@ -104,16 +101,15 @@
       </div>
 
       <nav class="slide-nav">
-        <a href="#slide-3" class="nav-link">←</a>
-        <a href="#slide-5" class="nav-link">→</a>
+        <a href="#quote-essence" class="nav-link">←</a>
+        <a href="#quote-service-objects" class="nav-link">→</a>
       </nav>
-      <div class="slide-counter">4 / 11</div>
     </section>
 
     <!-- ================================================================
-         SLIDE 5: Service Objects Quote
+         Quote: Service Objects
          ================================================================ -->
-    <section class="slide slide--pattern" id="slide-5">
+    <section class="slide slide--pattern" id="quote-service-objects">
       <div class="slide-inner">
         <div class="quote">
           <p class="quote-text">Service objects are not meant to implement your business knowledge. They are meant to orchestrate your domain objects.</p>
@@ -122,16 +118,15 @@
       </div>
 
       <nav class="slide-nav">
-        <a href="#slide-4" class="nav-link">←</a>
-        <a href="#slide-6" class="nav-link">→</a>
+        <a href="#domain-center" class="nav-link">←</a>
+        <a href="#code-card-model" class="nav-link">→</a>
       </nav>
-      <div class="slide-counter">5 / 11</div>
     </section>
 
     <!-- ================================================================
-         SLIDE 6: Rich Domain Model Example
+         Code: Card Model
          ================================================================ -->
-    <section class="slide slide--dark" id="slide-6">
+    <section class="slide slide--dark" id="code-card-model">
       <div class="slide-inner">
         <h2 class="slide-title">Rich, coherent domain objects</h2>
 
@@ -158,16 +153,15 @@ end</code></pre>
       </div>
 
       <nav class="slide-nav">
-        <a href="#slide-5" class="nav-link">←</a>
-        <a href="#slide-7" class="nav-link">→</a>
+        <a href="#quote-service-objects" class="nav-link">←</a>
+        <a href="#code-concern" class="nav-link">→</a>
       </nav>
-      <div class="slide-counter">6 / 11</div>
     </section>
 
     <!-- ================================================================
-         SLIDE 7: Concerns Example
+         Code: Concern Example
          ================================================================ -->
-    <section class="slide slide--dark" id="slide-7">
+    <section class="slide slide--dark" id="code-concern">
       <div class="slide-inner">
         <h2 class="slide-title">Traits as concerns</h2>
 
@@ -201,16 +195,15 @@ end</code></pre>
       </div>
 
       <nav class="slide-nav">
-        <a href="#slide-6" class="nav-link">←</a>
-        <a href="#slide-8" class="nav-link">→</a>
+        <a href="#code-card-model" class="nav-link">←</a>
+        <a href="#code-controller" class="nav-link">→</a>
       </nav>
-      <div class="slide-counter">7 / 11</div>
     </section>
 
     <!-- ================================================================
-         SLIDE 8: Controllers as Orchestrators
+         Code: Controller
          ================================================================ -->
-    <section class="slide slide--dark" id="slide-8">
+    <section class="slide slide--dark" id="code-controller">
       <div class="slide-inner">
         <h2 class="slide-title">Controllers orchestrate</h2>
 
@@ -240,16 +233,15 @@ end</code></pre>
       </div>
 
       <nav class="slide-nav">
-        <a href="#slide-7" class="nav-link">←</a>
-        <a href="#slide-9" class="nav-link">→</a>
+        <a href="#code-concern" class="nav-link">←</a>
+        <a href="#code-plain-ruby" class="nav-link">→</a>
       </nav>
-      <div class="slide-counter">8 / 11</div>
     </section>
 
     <!-- ================================================================
-         SLIDE 9: Plain Ruby Objects
+         Code: Plain Ruby Object
          ================================================================ -->
-    <section class="slide slide--dark" id="slide-9">
+    <section class="slide slide--dark" id="code-plain-ruby">
       <div class="slide-inner">
         <h2 class="slide-title">Plain Ruby objects as domain models</h2>
 
@@ -282,16 +274,15 @@ end</code></pre>
       </div>
 
       <nav class="slide-nav">
-        <a href="#slide-8" class="nav-link">←</a>
-        <a href="#slide-10" class="nav-link">→</a>
+        <a href="#code-controller" class="nav-link">←</a>
+        <a href="#epicenter" class="nav-link">→</a>
       </nav>
-      <div class="slide-counter">9 / 11</div>
     </section>
 
     <!-- ================================================================
-         SLIDE 10: Epicenter Philosophy
+         Epicenter Philosophy
          ================================================================ -->
-    <section class="slide slide--pattern" id="slide-10">
+    <section class="slide slide--pattern" id="epicenter">
       <div class="slide-inner">
         <h2 class="slide-title">The Epicenter Philosophy</h2>
 
@@ -315,16 +306,15 @@ end</code></pre>
       </div>
 
       <nav class="slide-nav">
-        <a href="#slide-9" class="nav-link">←</a>
-        <a href="#slide-11" class="nav-link">→</a>
+        <a href="#code-plain-ruby" class="nav-link">←</a>
+        <a href="#takeaways" class="nav-link">→</a>
       </nav>
-      <div class="slide-counter">10 / 11</div>
     </section>
 
     <!-- ================================================================
-         SLIDE 11: Key Takeaways
+         Key Takeaways
          ================================================================ -->
-    <section class="slide slide--gradient" id="slide-11">
+    <section class="slide slide--gradient" id="takeaways">
       <div class="slide-inner">
         <h2 class="slide-title">Key Takeaways</h2>
 
@@ -344,18 +334,17 @@ end</code></pre>
       </div>
 
       <nav class="slide-nav">
-        <a href="#slide-10" class="nav-link">←</a>
+        <a href="#epicenter" class="nav-link">←</a>
         <span class="nav-disabled">→</span>
       </nav>
-      <div class="slide-counter">11 / 11</div>
     </section>
 
   </div>
-
+  
   <!-- Prism.js for syntax highlighting -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-ruby.min.js"></script>
-
+  
   <!-- Keyboard navigation -->
   <script src="keyboard.js"></script>
 </body>
