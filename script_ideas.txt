@@ -1,0 +1,18 @@
+DDD presentation
+
+Ask AI to make a HTML presentation of the three most important takeaways from Jorge’s presentation.
+
+* As a consultant I used to add gems for everything, at 37signals the preference was to only use what Rails provided and I never missed reaching for third part gems.
+* ”Placing the domain model at the center”
+* ”Behaviors and nouns of the domain”
+* The controller connects your domain objects with the external world. This is exactly the original role of what’s called a service object.
+* ”Service objects are not meant to implement your business knowledge.” The are ment to orchestrate your domain objects.
+* ”We care about reducing solutions to their essence”
+* Instead of having a rich, coherent domain object that captures the ideas of your domain you have a very long flat list of small operations where you either duplicate codes or create couplings between service objects.
+* We can still use plain ruby objects and active models without persistence as our domain objects.
+* Semantic terms and method names rather than “call”.
+* Organize models inte traits and roles with module concerns
+* Prioritize what’s coherent for us humans.
+* Intuitive to humans rather than computer science theoretical correctness.
+* In ShapeUp we start with the epicenter and work our way out. 37signals applies the same philosophy to code organization. The domain object defines the epicenter and extends outwards with roles and traits as concern modules.
+* You’re encouraged to use both concerns and object composition.

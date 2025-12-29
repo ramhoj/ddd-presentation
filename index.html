@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Code Design at the Center</title>
+  
+  <!-- Teamtailor fonts: Inter -->
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  
+  <!-- Prism.js for syntax highlighting (loaded inline, no JS navigation) -->
+  <link rel="stylesheet" href="prism-theme.css">
+  
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="presentation">
+    
+    <!-- ================================================================
+         SLIDE 1: Title
+         ================================================================ -->
+    <section class="slide slide--gradient" id="slide-1">
+      <div class="slide-inner">
+        <span class="badge">Code Design</span>
+        <h1 class="slide-title slide-title--large">The Domain<br>at the Center</h1>
+        <p class="slide-subtitle">Lessons from 37signals on building maintainable Rails applications</p>
+        
+        <div class="author">
+          <div class="author-info">
+            <p class="author-name">Nicklas</p>
+            <p class="author-role">Teamtailor</p>
+          </div>
+        </div>
+      </div>
+      
+      <nav class="slide-nav">
+        <span class="nav-disabled">←</span>
+        <a href="#slide-2" class="nav-link">→</a>
+      </nav>
+      <div class="slide-counter">1 / 10</div>
+    </section>
+
+    <!-- ================================================================
+         SLIDE 2: Philosophy Quote
+         ================================================================ -->
+    <section class="slide slide--pattern" id="slide-2">
+      <div class="slide-inner">
+        <div class="quote">
+          <p class="quote-text">We care about reducing solutions to their essence.</p>
+          <p class="quote-author">Jorge Manrubia, 37signals</p>
+        </div>
+      </div>
+      
+      <nav class="slide-nav">
+        <a href="#slide-1" class="nav-link">←</a>
+        <a href="#slide-3" class="nav-link">→</a>
+      </nav>
+      <div class="slide-counter">2 / 10</div>
+    </section>
+
+    <!-- ================================================================
+         SLIDE 3: Domain at the Center
+         ================================================================ -->
+    <section class="slide slide--dark" id="slide-3">
+      <div class="slide-inner">
+        <h2 class="slide-title">Placing the domain model at the center</h2>
+        
+        <div class="diagram">
+          <div class="diagram-box">Controllers</div>
+          <span class="diagram-arrow">→</span>
+          <div class="diagram-box diagram-box--primary">Domain Models</div>
+          <span class="diagram-arrow">←</span>
+          <div class="diagram-box">Views</div>
+        </div>
+        
+        <p class="slide-text">
+          The domain model captures the <em>behaviors and nouns</em> of your business.<br>
+          Everything else orchestrates or presents it.
+        </p>
+      </div>
+      
+      <nav class="slide-nav">
+        <a href="#slide-2" class="nav-link">←</a>
+        <a href="#slide-4" class="nav-link">→</a>
+      </nav>
+      <div class="slide-counter">3 / 10</div>
+    </section>
+
+    <!-- ================================================================
+         SLIDE 4: Service Objects Quote
+         ================================================================ -->
+    <section class="slide slide--pattern" id="slide-4">
+      <div class="slide-inner">
+        <div class="quote">
+          <p class="quote-text">Service objects are not meant to implement your business knowledge. They are meant to orchestrate your domain objects.</p>
+          <p class="quote-author">Jorge Manrubia</p>
+        </div>
+      </div>
+      
+      <nav class="slide-nav">
+        <a href="#slide-3" class="nav-link">←</a>
+        <a href="#slide-5" class="nav-link">→</a>
+      </nav>
+      <div class="slide-counter">4 / 10</div>
+    </section>
+
+    <!-- ================================================================
+         SLIDE 5: Rich Domain Model Example
+         ================================================================ -->
+    <section class="slide slide--dark" id="slide-5">
+      <div class="slide-inner">
+        <h2 class="slide-title">Rich, coherent domain objects</h2>
+        
+        <div class="code-container">
+          <span class="code-filename">app/models/card.rb</span>
+          <pre class="code-block"><code class="language-ruby">class Card < ApplicationRecord
+  include Assignable, Closeable, Golden, Postponable,
+    Searchable, Taggable, Watchable
+
+  belongs_to :board
+  belongs_to :creator, class_name: "User"
+  
+  has_many :comments, dependent: :destroy
+  has_rich_text :description
+
+  scope :golden, -> { joins(:goldness) }
+  scope :latest, -> { order(last_active_at: :desc) }
+end</code></pre>
+        </div>
+        
+        <p class="slide-text">
+          Concerns organize traits and roles. The model stays readable and coherent.
+        </p>
+      </div>
+      
+      <nav class="slide-nav">
+        <a href="#slide-4" class="nav-link">←</a>
+        <a href="#slide-6" class="nav-link">→</a>
+      </nav>
+      <div class="slide-counter">5 / 10</div>
+    </section>
+
+    <!-- ================================================================
+         SLIDE 6: Concerns Example
+         ================================================================ -->
+    <section class="slide slide--dark" id="slide-6">
+      <div class="slide-inner">
+        <h2 class="slide-title">Traits as concerns</h2>
+        
+        <div class="code-container">
+          <span class="code-filename">app/models/card/golden.rb</span>
+          <pre class="code-block"><code class="language-ruby">module Card::Golden
+  extend ActiveSupport::Concern
+
+  included do
+    has_one :goldness, dependent: :destroy
+    scope :golden, -> { joins(:goldness) }
+  end
+
+  def golden?
+    goldness.present?
+  end
+
+  def gild
+    create_goldness! unless golden?
+  end
+
+  def ungild
+    goldness&.destroy
+  end
+end</code></pre>
+        </div>
+        
+        <p class="slide-text">
+          Semantic method names: <code>gild</code> and <code>ungild</code>, not <code>call</code>.
+        </p>
+      </div>
+      
+      <nav class="slide-nav">
+        <a href="#slide-5" class="nav-link">←</a>
+        <a href="#slide-7" class="nav-link">→</a>
+      </nav>
+      <div class="slide-counter">6 / 10</div>
+    </section>
+
+    <!-- ================================================================
+         SLIDE 7: Controllers as Orchestrators
+         ================================================================ -->
+    <section class="slide slide--dark" id="slide-7">
+      <div class="slide-inner">
+        <h2 class="slide-title">Controllers orchestrate</h2>
+        
+        <div class="code-container">
+          <span class="code-filename">app/controllers/signups_controller.rb</span>
+          <pre class="code-block"><code class="language-ruby">class SignupsController < ApplicationController
+  def new
+    @signup = Signup.new
+  end
+
+  def create
+    signup = Signup.new(signup_params)
+    
+    if signup.valid?(:identity_creation)
+      redirect_to_session_magic_link signup.create_identity
+    else
+      head :unprocessable_entity
+    end
+  end
+end</code></pre>
+        </div>
+        
+        <p class="slide-text">
+          The controller connects domain objects with the external world.<br>
+          This <em>is</em> the role of a service object—we just don't need a separate class.
+        </p>
+      </div>
+      
+      <nav class="slide-nav">
+        <a href="#slide-6" class="nav-link">←</a>
+        <a href="#slide-8" class="nav-link">→</a>
+      </nav>
+      <div class="slide-counter">7 / 10</div>
+    </section>
+
+    <!-- ================================================================
+         SLIDE 8: Plain Ruby Objects
+         ================================================================ -->
+    <section class="slide slide--dark" id="slide-8">
+      <div class="slide-inner">
+        <h2 class="slide-title">Plain Ruby objects as domain models</h2>
+        
+        <div class="code-container">
+          <span class="code-filename">app/models/signup.rb</span>
+          <pre class="code-block"><code class="language-ruby">class Signup
+  include ActiveModel::Model
+  include ActiveModel::Validations
+
+  attr_accessor :full_name, :email_address, :identity
+
+  validates :email_address, format: { with: URI::MailTo::EMAIL_REGEXP },
+    on: :identity_creation
+  validates :full_name, :identity, presence: true, on: :completion
+
+  def create_identity
+    @identity = Identity.find_or_create_by!(email_address: email_address)
+    @identity.send_magic_link for: :sign_up
+  end
+
+  def complete
+    valid?(:completion) && create_account
+  end
+end</code></pre>
+        </div>
+        
+        <p class="slide-text">
+          ActiveModel without persistence. A first-class domain object.
+        </p>
+      </div>
+      
+      <nav class="slide-nav">
+        <a href="#slide-7" class="nav-link">←</a>
+        <a href="#slide-9" class="nav-link">→</a>
+      </nav>
+      <div class="slide-counter">8 / 10</div>
+    </section>
+
+    <!-- ================================================================
+         SLIDE 9: Epicenter Philosophy
+         ================================================================ -->
+    <section class="slide slide--pattern" id="slide-9">
+      <div class="slide-inner">
+        <h2 class="slide-title">The Epicenter Philosophy</h2>
+        
+        <p class="slide-text" style="margin-bottom: 2rem;">
+          In ShapeUp we start with the epicenter and work our way out.<br>
+          37signals applies the same philosophy to code organization:
+        </p>
+        
+        <div class="diagram">
+          <div class="diagram-box">Concerns</div>
+          <span class="diagram-arrow">→</span>
+          <div class="diagram-box diagram-box--primary">Domain Model</div>
+          <span class="diagram-arrow">←</span>
+          <div class="diagram-box">Concerns</div>
+        </div>
+        
+        <p class="slide-text">
+          The domain object defines the epicenter.<br>
+          Roles and traits extend outward as concern modules.
+        </p>
+      </div>
+      
+      <nav class="slide-nav">
+        <a href="#slide-8" class="nav-link">←</a>
+        <a href="#slide-10" class="nav-link">→</a>
+      </nav>
+      <div class="slide-counter">9 / 10</div>
+    </section>
+
+    <!-- ================================================================
+         SLIDE 10: Key Takeaways
+         ================================================================ -->
+    <section class="slide slide--gradient" id="slide-10">
+      <div class="slide-inner">
+        <h2 class="slide-title">Key Takeaways</h2>
+        
+        <ul class="takeaways">
+          <li>Place the domain model at the center of your architecture</li>
+          <li>Service objects orchestrate—they don't hold business logic</li>
+          <li>Use concerns to organize traits and roles naturally</li>
+          <li>Prefer semantic names over generic patterns like <code>call</code></li>
+          <li>Plain Ruby objects + ActiveModel work beautifully</li>
+          <li>Prioritize what's coherent for humans over theoretical purity</li>
+        </ul>
+        
+        <p class="slide-text" style="margin-top: 2rem; color: var(--tt-grey-43);">
+          These are suggestions offered humbly—not mandates.<br>
+          What matters is code that's easy to understand and maintain.
+        </p>
+      </div>
+      
+      <nav class="slide-nav">
+        <a href="#slide-9" class="nav-link">←</a>
+        <span class="nav-disabled">→</span>
+      </nav>
+      <div class="slide-counter">10 / 10</div>
+    </section>
+
+  </div>
+  
+  <!-- Prism.js for syntax highlighting only - no navigation JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-ruby.min.js"></script>
+</body>
+</html>
