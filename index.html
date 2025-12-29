@@ -277,7 +277,7 @@ end</code></pre>
 CardSendBackToTriage.call(card)
 
 # Separate class required
-class CardSendBackToTriage
+class Card::SendBackToTriage
   def initialize(card)
     @card = card
   end
@@ -297,16 +297,15 @@ card.send_back_to_triage
 
 
 # That's it.
-# The behavior lives
-# in the domain model
+# The behavior lives in the domain model,
 # where it belongs.</code></pre>
             </div>
           </div>
         </div>
 
         <p class="slide-text" style="margin-top: 1.5rem;">
-          The service object wraps one line of code with a whole class.<br>
-          The boilerplate draws attention away from the business logic.
+          What's isn't there is as important as what is.<br>
+          The sooner we can get to the point, the faster we'll understand the intent.
         </p>
       </div>
 
@@ -334,16 +333,11 @@ card.send_back_to_triage
             <span class="naming-arrow">→</span>
             <code class="naming-good">card.resume</code>
           </div>
-          <div class="naming-row">
-            <code class="naming-bad">SignupService.call(params)</code>
-            <span class="naming-arrow">→</span>
-            <code class="naming-good">signup.create_identity</code>
-          </div>
         </div>
 
         <p class="slide-text" style="margin-top: 2rem;">
-          Generic verbs like <code>call</code> and <code>execute</code> say nothing about intent.<br>
-          Domain methods read like prose: <em>"The card is gilded. The signup creates an identity."</em>
+          Generic verbs like <code>call</code> and <code>execute</code> say nothing about intent, they don't add value or information.<br>
+          Domain methods read like prose: <em>"The card is gilded."</em>, <em>"Guild the card."</em>
         </p>
       </div>
 
