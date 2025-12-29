@@ -381,12 +381,19 @@ card.send_back_to_triage
         <h2 class="slide-title">Controllers orchestrate the domain</h2>
 
         <div class="code-container">
-          <span class="code-filename">app/controllers/cards/triages_controller.rb</span>
-          <pre class="code-block"><code class="language-ruby">class Cards::TriagesController < ApplicationController
-  def destroy
-    card.send_back_to_triage
+          <span class="code-filename">app/controllers/cards/closures_controller.rb</span>
+          <pre class="code-block"><code class="language-ruby">class Cards::ClosuresController < ApplicationController
+  include CardScoped
+
+  def create
+    @card.close
   end
-end</code></pre>
+
+  def destroy
+    @card.reopen
+  end
+end
+          </code></pre>
         </div>
 
         <p class="slide-text" style="margin-top: 1.5rem;">
@@ -410,41 +417,38 @@ end</code></pre>
          ================================================================ -->
     <section class="slide slide--dark" id="concerns-composition">
       <div class="slide-inner">
-        <h2 class="slide-title">Concerns + object composition</h2>
-
-        <p class="slide-text" style="margin-bottom: 2rem;">
-          Concerns don't replace object-oriented design—they complement it.
-        </p>
+        <h2 class="slide-title">Concerns + object composition = ❤️</h2>
 
         <div class="comparison">
           <div class="comparison-side">
-            <h3 style="color: var(--tt-white);">The concern organizes behavior</h3>
             <div class="code-container">
-              <span class="code-filename">app/models/card/golden.rb</span>
-              <pre class="code-block"><code class="language-ruby">has_one :goldness
+              <pre class="code-block"><code class="language-ruby">module Card::Stallable
+  extend ActiveSupport::Concern
 
-def gild
-  create_goldness! unless golden?
+  included do
+    has_one :activity_spike, class_name: "Card::ActivitySpike"
+    after_update_commit :detect_activity_spikes_later
+  end
+
+  def stalled?
+    open? && last_activity_spike_at < 14.days.ago && updated_at < 14.days.ago
+  end
+
+  def last_activity_spike_at
+    activity_spike&.updated_at
+  end
+
+  def detect_activity_spikes
+    Card::ActivitySpike::Detector.new(self).detect
+  end
 end</code></pre>
             </div>
           </div>
-
-          <div class="comparison-side">
-            <h3 style="color: var(--tt-white);">The model holds the data</h3>
-            <div class="code-container">
-              <span class="code-filename">app/models/card/goldness.rb</span>
-              <pre class="code-block"><code class="language-ruby">class Card::Goldness < ApplicationRecord
-  belongs_to :card, touch: true
-end</code></pre>
-            </div>
-          </div>
-        </div>
-
-        <p class="slide-text" style="margin-top: 1.5rem;">
-          The concern provides the API. The composed object stores state.<br>
-          You're encouraged to use both.
-        </p>
       </div>
+
+      <p class="slide-text" style="margin-top: 1rem; color: var(--tt-grey-43);">
+        Concerns don't replace object-oriented design—they complement it.
+      </p>
 
       <nav class="slide-nav">
         <a href="#code-controller" class="nav-link">←</a>
