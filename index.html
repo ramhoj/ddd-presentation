@@ -431,36 +431,30 @@ end</code></pre>
       <div class="slide-inner">
         <h2 class="slide-title">Concerns + object composition = ❤️</h2>
 
-        <div class="comparison">
-          <div class="comparison-side">
-            <div class="code-container">
-              <pre class="code-block"><code class="language-ruby">module Card::Stallable
+        <div class="code-container">
+          <span class="code-filename">app/models/card/stallable.rb</span>
+          <pre class="code-block"><code class="language-ruby">module Card::Stallable
   extend ActiveSupport::Concern
 
   included do
     has_one :activity_spike, class_name: "Card::ActivitySpike"
-    after_update_commit :detect_activity_spikes_later
   end
 
   def stalled?
-    open? && last_activity_spike_at < 14.days.ago && updated_at < 14.days.ago
-  end
-
-  def last_activity_spike_at
-    activity_spike&.updated_at
+    open? && last_activity_spike_at < 14.days.ago
   end
 
   def detect_activity_spikes
     Card::ActivitySpike::Detector.new(self).detect
   end
 end</code></pre>
-            </div>
-          </div>
-      </div>
-      <p class="slide-text" style="margin-top: 1rem; color: var(--tt-grey-43);">
-        Concerns don't replace object-oriented design—they complement it.
-      </p>
+        </div>
 
+        <p class="slide-text">
+          The concern organizes the API. The <code>Detector</code> object does the work.<br>
+          Concerns don't replace object-oriented design—they complement it.
+        </p>
+      </div>
 
       <nav class="slide-nav">
         <a href="#code-controller" class="nav-link">←</a>
