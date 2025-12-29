@@ -130,7 +130,7 @@
 
         <p class="slide-text">
           The domain model defines our epicenter — the <em>behaviors and nouns</em> of our business.<br>
-          Roles and traits extend outward as concern modules, utalizing object composition when necessary.
+          Roles and traits extend outward as concern modules, utilizing object composition when necessary.
         </p>
       </div>
 
@@ -241,7 +241,7 @@ end</code></pre>
 
       <nav class="slide-nav">
         <a href="#code-concern" class="nav-link">←</a>
-        <a href="#quote-service-objects" class="nav-link">→</a>
+        <a href="#service-comparison" class="nav-link">→</a>
       </nav>
     </section>
 
@@ -252,12 +252,19 @@ end</code></pre>
       <div class="slide-inner">
         <h2 class="slide-title">Boilerplate obscures intent</h2>
 
-        <div class="comparison">
-          <div class="comparison-side comparison-side--bad">
-            <h3>With a service object</h3>
-            <div class="code-container">
-              <pre class="code-block"><code class="language-ruby"># In the controller
-CardSendBackToTriage.call(card)
+        <div class="code-tabs">
+          <div class="code-tabs-nav">
+            <button class="code-tab active" data-tab="simple">Simple: single domain call</button>
+            <button class="code-tab" data-tab="complex">Complex: multi-entity orchestration</button>
+          </div>
+
+          <div class="code-tab-content active" id="tab-simple">
+            <div class="comparison">
+              <div class="comparison-side comparison-side--bad">
+                <h3>With a service object</h3>
+                <div class="code-container">
+                  <pre class="code-block"><code class="language-ruby"># In the controller
+Card::SendBackToTriage.call(card)
 
 # Separate class required
 class Card::SendBackToTriage
@@ -269,31 +276,73 @@ class Card::SendBackToTriage
     @card.send_back_to_triage
   end
 end</code></pre>
-            </div>
-          </div>
+                </div>
+              </div>
 
-          <div class="comparison-side comparison-side--good">
-            <h3>Directly on the domain model</h3>
-            <div class="code-container">
-              <pre class="code-block"><code class="language-ruby"># In the controller
+              <div class="comparison-side comparison-side--good">
+                <h3>Directly on the domain</h3>
+                <div class="code-container">
+                  <pre class="code-block"><code class="language-ruby"># In the controller
 card.send_back_to_triage
 
 
 # That's it.
-# The behavior lives in the domain model,
-# where it belongs.</code></pre>
+# The behavior lives
+# in the domain model.</code></pre>
+                </div>
+              </div>
             </div>
+          </div>
+
+          <div class="code-tab-content" id="tab-complex">
+            <div class="comparison">
+              <div class="comparison-side comparison-side--bad">
+                <h3>With a service object</h3>
+                <div class="code-container">
+                  <pre class="code-block"><code class="language-ruby">class Board::UpdateService
+  def initialize(board, params, users)
+    @board = board
+    @params = params
+    @users = users
+  end
+
+  def call
+    @board.update!(@params)
+    @board.accesses.revise(@users)
+  end
+end</code></pre>
+                </div>
+              </div>
+
+              <div class="comparison-side comparison-side--good">
+                <h3>With a form object</h3>
+                <div class="code-container">
+                  <pre class="code-block"><code class="language-ruby">class Board::Form
+  include ActiveModel::Model
+  attr_accessor :board, :name, :users
+
+  def save
+    board.update!(name:)
+    board.accesses.revise(users)
+  end
+end</code></pre>
+                </div>
+              </div>
+            </div>
+            <p class="slide-text" style="margin-top: 1rem; font-size: 1rem;">
+              When coordinating multiple entities, a form object keeps it in the domain—with validation, semantic naming, and no <code>call</code>.
+            </p>
           </div>
         </div>
 
-        <p class="slide-text" style="margin-top: 1.5rem;">
-          What's isn't there is as important as what is.<br>
+        <p class="slide-text">
+          What isn't there is as important as what is.<br>
           The sooner we can get to the point, the faster we'll understand the intent.
         </p>
       </div>
 
       <nav class="slide-nav">
-        <a href="#quote-service-objects" class="nav-link">←</a>
+        <a href="#chapter-simpler-way" class="nav-link">←</a>
         <a href="#semantic-naming" class="nav-link">→</a>
       </nav>
     </section>
@@ -346,26 +395,26 @@ card.send_back_to_triage
 
       <nav class="slide-nav">
         <a href="#semantic-naming" class="nav-link">←</a>
-        <a href="#code-controller" class="nav-link">→</a>
+        <a href="#quote-service-objects" class="nav-link">→</a>
       </nav>
     </section>
 
     <!-- ================================================================
          Quote: Service Objects
          ================================================================ -->
-         <section class="slide slide--pattern" id="quote-service-objects">
-          <div class="slide-inner">
-            <div class="quote">
-              <p class="quote-text">Service objects are not meant to implement your business logic. They are meant to orchestrate your domain objects.</p>
-              <p class="quote-author">Jorge Manrubia, 37signals</p>
-            </div>
-          </div>
+    <section class="slide slide--pattern" id="quote-service-objects">
+      <div class="slide-inner">
+        <div class="quote">
+          <p class="quote-text">Service objects are not meant to implement your business logic. They are meant to orchestrate your domain objects.</p>
+          <p class="quote-author">Jorge Manrubia, 37signals</p>
+        </div>
+      </div>
 
-          <nav class="slide-nav">
-            <a href="#chapter-simpler-way" class="nav-link">←</a>
-            <a href="#service-comparison" class="nav-link">→</a>
-          </nav>
-        </section>
+      <nav class="slide-nav">
+        <a href="#chapter-orchestration" class="nav-link">←</a>
+        <a href="#code-controller" class="nav-link">→</a>
+      </nav>
+    </section>
 
     <!-- ================================================================
          Code: Controller
@@ -403,7 +452,7 @@ end</code></pre>
           </div>
           <p class="slide-text" style="margin-top: 1rem; color: var(--tt-grey-43);">
             Controllers connect our domain models with the external world.
-            In much the same way jobs acts as a thin layer of orchestration for our domain logic.
+            In much the same way, jobs act as a thin layer of orchestration for our domain logic.
           </p>
           <p class="slide-text" style="margin-top: 1rem; color: var(--tt-grey-43);">
             These <em>are</em> our service objects, we just don't call them that.
@@ -413,7 +462,7 @@ end</code></pre>
       </div>
 
       <nav class="slide-nav">
-        <a href="#chapter-orchestration" class="nav-link">←</a>
+        <a href="#quote-service-objects" class="nav-link">←</a>
         <a href="#concerns-composition" class="nav-link">→</a>
       </nav>
     </section>
@@ -447,7 +496,7 @@ end</code></pre>
 
         <p class="slide-text">
           The concern organizes the API. The <code>Detector</code> object takes care of detection details.<br>
-          Concerns don't replace object - oriented design—they complement it.
+          Concerns don't replace object-oriented design—they complement it.
         </p>
       </div>
 
@@ -473,7 +522,7 @@ end</code></pre>
           <li>Use concerns to organize traits that belong together</li>
           <li>Prefer semantic names over generic verbs like <code>call</code></li>
           <li>Controllers and jobs orchestrate; they don't hold business logic</li>
-          <li>Minimize boilerplate to allow the intent to be more directly accessable</li>
+          <li>Minimize boilerplate to allow intent to be more directly accessible</li>
           <li>Prioritize what's coherent for humans over theoretical purity</li>
         </ul>
       </div>

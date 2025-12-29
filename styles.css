@@ -644,7 +644,7 @@ body:has(.slide:target) .slide:not(:target) {
 
 .code-tabs {
   width: 100%;
-  max-width: 700px;
+  max-width: 1000px;
   margin: var(--space-lg) auto;
   text-align: left;
 }
@@ -686,6 +686,7 @@ body:has(.slide:target) .slide:not(:target) {
   border: 1px solid var(--tt-grey-78);
   border-radius: 0 8px 8px 8px;
   margin-top: -1px;
+  padding: var(--space-lg);
 }
 
 .code-tab-content.active {
@@ -696,6 +697,12 @@ body:has(.slide:target) .slide:not(:target) {
   border: none;
   border-radius: 0 8px 8px 8px;
   margin: 0;
+}
+
+/* When tab content contains a comparison, add border to inner code blocks */
+.code-tab-content .comparison .code-block {
+  border: 1px solid var(--tt-grey-78);
+  border-radius: 8px;
 }
 
 /* =============================================================================
