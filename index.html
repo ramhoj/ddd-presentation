@@ -128,26 +128,9 @@
           We can apply the same philosophy to code organization.
         </p>
 
-        <div class="model-visual">
-          <div class="model-card">
-            <span class="model-name">Card</span>
-            <div class="model-traits">
-              <span class="trait-badge">Golden</span>
-              <span class="trait-badge">Stallable</span>
-              <span class="trait-badge">Searchable</span>
-              <span class="trait-badge trait-badge--faded">+ more</span>
-            </div>
-            <div class="model-compositions">
-              <span class="composition-label">composes</span>
-              <span class="composition-item">Goldness</span>
-              <span class="composition-item">ActivitySpike</span>
-            </div>
-          </div>
-        </div>
-
         <p class="slide-text">
-          The domain model defines the epicenter — the <em>behaviors and nouns</em> of your business.<br>
-          Roles and traits extend outward as concern modules.
+          The domain model defines our epicenter — the <em>behaviors and nouns</em> of our business.<br>
+          Roles and traits extend outward as concern modules, utalizing object composition when necessary.
         </p>
       </div>
 
@@ -232,7 +215,7 @@ end</code></pre>
         </div>
 
         <p class="slide-text">
-          Things that belong together, live together. Easy to understand, easy to maintain.
+          Things that belong together, live together. Easy to understand, easy to maintain, minimal distractions.
         </p>
       </div>
 
@@ -252,8 +235,8 @@ end</code></pre>
     <section class="slide slide--accent" id="chapter-simpler-way">
       <div class="slide-inner">
         <p class="chapter-label">Chapter 2</p>
-        <h2 class="slide-title slide-title--large">A Simpler Way</h2>
-        <p class="slide-subtitle">Code that reads like prose</p>
+        <h2 class="slide-title slide-title--large">Focus on intent, not implementation</h2>
+        <p class="slide-subtitle">Code that reads like prose, not like a computer science textbook</p>
       </div>
 
       <nav class="slide-nav">
@@ -290,7 +273,7 @@ end</code></pre>
           </div>
 
           <div class="comparison-side comparison-side--good">
-            <h3>Directly on the domain</h3>
+            <h3>Directly on the domain model</h3>
             <div class="code-container">
               <pre class="code-block"><code class="language-ruby"># In the controller
 card.send_back_to_triage
@@ -337,7 +320,7 @@ card.send_back_to_triage
 
         <p class="slide-text" style="margin-top: 2rem;">
           Generic verbs like <code>call</code> and <code>execute</code> say nothing about intent, they don't add value or information.<br>
-          Domain methods read like prose: <em>"The card is gilded."</em>, <em>"Guild the card."</em>
+          Domain methods read like prose: <em>"Is the card gilded?"</em>, <em>"Gild the card."</em>
         </p>
       </div>
 
@@ -358,7 +341,7 @@ card.send_back_to_triage
       <div class="slide-inner">
         <p class="chapter-label">Chapter 3</p>
         <h2 class="slide-title slide-title--large">Orchestration</h2>
-        <p class="slide-subtitle">Controllers, jobs, and plain Ruby objects</p>
+        <p class="slide-subtitle">Controllers and jobs</p>
       </div>
 
       <nav class="slide-nav">
@@ -420,10 +403,10 @@ end</code></pre>
           </div>
           <p class="slide-text" style="margin-top: 1rem; color: var(--tt-grey-43);">
             Controllers connect our domain models with the external world.
-            In much the same way jobs acts as a thin layer of orchestration for domain logic.
+            In much the same way jobs acts as a thin layer of orchestration for our domain logic.
           </p>
           <p class="slide-text" style="margin-top: 1rem; color: var(--tt-grey-43);">
-            These <em>are</em> the roles of a service object, we just don't call them that.
+            These <em>are</em> our service objects, we just don't call them that.
           </p>
         </div>
 
@@ -449,6 +432,7 @@ end</code></pre>
 
   included do
     has_one :activity_spike, class_name: "Card::ActivitySpike"
+    after_update_commit :detect_activity_spikes
   end
 
   def stalled?
@@ -462,8 +446,8 @@ end</code></pre>
         </div>
 
         <p class="slide-text">
-          The concern organizes the API. The <code>Detector</code> object does the work.<br>
-          Concerns don't replace object-oriented design—they complement it.
+          The concern organizes the API. The <code>Detector</code> object takes care of detection details.<br>
+          Concerns don't replace object - oriented design—they complement it.
         </p>
       </div>
 
@@ -485,11 +469,11 @@ end</code></pre>
         <h2 class="slide-title">Key Takeaways</h2>
 
         <ul class="takeaways">
-          <li>Place the domain model at the center of your architecture</li>
-          <li>Use concerns to organize traits—things that belong together, together</li>
-          <li>Prefer semantic names over generic patterns like <code>call</code></li>
+          <li>Let the domain model take the center stage in your architecture</li>
+          <li>Use concerns to organize traits that belong together</li>
+          <li>Prefer semantic names over generic verbs like <code>call</code></li>
           <li>Controllers and jobs orchestrate; they don't hold business logic</li>
-          <li>Plain Ruby objects + ActiveModel work beautifully as domain models</li>
+          <li>Minimize boilerplate to allow the intent to be more directly accessable</li>
           <li>Prioritize what's coherent for humans over theoretical purity</li>
         </ul>
       </div>
