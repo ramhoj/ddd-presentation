@@ -979,3 +979,80 @@ body:has(.slide:target) .slide:not(:target) {
   opacity: 1;
   color: var(--tt-grey-43);
 }
+
+/* =============================================================================
+   EPICENTER VISUALIZATION
+   ============================================================================= */
+
+.epicenter-visual {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: var(--space-lg) 0;
+}
+
+.epicenter-ring {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  position: relative;
+}
+
+.epicenter-ring--outer {
+  width: 320px;
+  height: 320px;
+  border: 2px dashed var(--tt-grey-64);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.epicenter-ring--middle {
+  width: 200px;
+  height: 200px;
+  border: 2px solid var(--tt-grey-43);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.epicenter-ring--center {
+  width: 90px;
+  height: 90px;
+  border: 3px solid var(--tt-primary);
+  background: var(--tt-primary-deep);
+}
+
+.epicenter-core {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--tt-white);
+}
+
+.epicenter-label {
+  position: absolute;
+  font-size: 0.85rem;
+  color: var(--tt-grey-31);
+  font-family: 'SF Mono', 'Fira Code', monospace;
+}
+
+.epicenter-label--top {
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.epicenter-label--bottom {
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.epicenter-label--left {
+  left: -10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.epicenter-label--right {
+  right: -15px;
+  top: 50%;
+  transform: translateY(-50%);
+}
