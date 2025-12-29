@@ -264,10 +264,10 @@ end</code></pre>
                 <h3>With a service object</h3>
                 <div class="code-container">
                   <pre class="code-block"><code class="language-ruby"># In the controller
-Card::SendBackToTriage.call(card)
+Card::SendBackToTriageService.call(card)
 
-# Separate class required
-class Card::SendBackToTriage
+# Separate service class
+class Card::SendBackToTriageService
   def initialize(card)
     @card = card
   end
@@ -284,12 +284,12 @@ end</code></pre>
                 <div class="code-container">
                   <pre class="code-block"><code class="language-ruby"># In the controller
 card.send_back_to_triage
-
-
-# That's it.
-# The behavior lives
-# in the domain model.</code></pre>
+</code></pre>
                 </div>
+                <p class="slide-text" style="margin-top: 1rem; font-size: 1rem;">
+                  What isn't there is as important as what is.<br>
+                  The sooner we can get to the point, the faster we'll understand the intent.
+                </p>
               </div>
             </div>
           </div>
@@ -299,14 +299,14 @@ card.send_back_to_triage
               <div class="complex-example-side">
                 <h3>Controller</h3>
                 <div class="code-container">
-                  <pre class="code-block"><code class="language-ruby">class BoardsController < ApplicationController
-  def update
-    @form = Board::Form.new(board: @board, **form_params)
+                  <pre class="code-block"><code class="language-ruby">class Signups::CompletionsController
+  def create
+    @signup = Signup.new(signup_params)
 
-    if @form.save
-      redirect_to @board
+    if @signup.complete
+      redirect_to landing_url
     else
-      render :edit, status: :unprocessable_entity
+      render :new, status: :unprocessable_entity
     end
   end
 end</code></pre>
@@ -316,19 +316,21 @@ end</code></pre>
               <div class="complex-example-side">
                 <h3>Form object</h3>
                 <div class="code-container">
-                  <pre class="code-block"><code class="language-ruby">class Board::Form
+                  <pre class="code-block"><code class="language-ruby">class Signup
   include ActiveModel::Model
 
-  attr_accessor :board, :name, :users
+  attr_accessor :full_name, :identity
 
-  validates :name, presence: true
+  validates :full_name, :identity, presence: true
 
-  def save
-    return false unless valid?
-
-    board.update!(name:)
-    board.accesses.revise(users)
+  def complete
+    valid? && create_account
   end
+
+  private
+    def create_account
+      Account.create_with_owner(...)
+    end
 end</code></pre>
                 </div>
               </div>
@@ -338,11 +340,6 @@ end</code></pre>
             </p>
           </div>
         </div>
-
-        <p class="slide-text">
-          What isn't there is as important as what is.<br>
-          The sooner we can get to the point, the faster we'll understand the intent.
-        </p>
       </div>
 
       <nav class="slide-nav">
