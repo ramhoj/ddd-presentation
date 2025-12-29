@@ -4,18 +4,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Code Design at the Center</title>
-
+  
   <!-- Teamtailor fonts: Inter -->
   <link rel="preconnect" href="https://rsms.me/">
   <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
-
+  
   <!-- Prism.js for syntax highlighting -->
   <link rel="stylesheet" href="prism-theme.css">
-
+  
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="presentation">
+
+    <!-- ============================================================
+         CHAPTER 1: INTRODUCTION
+         ============================================================ -->
 
     <!-- ================================================================
          Title
@@ -23,7 +27,7 @@
     <section class="slide slide--gradient" id="title">
       <div class="slide-inner">
         <h1 class="slide-title slide-title--large">The Domain<br>at the Center</h1>
-        <p class="slide-subtitle">Lessons from 37signals on writing maintainable code that is easy to reason about and beautful to read.</p>
+        <p class="slide-subtitle">Lessons from 37signals on writing maintainable code that is easy to reason about and beautiful to read.</p>
       </div>
 
       <nav class="slide-nav">
@@ -88,19 +92,22 @@
 
       <nav class="slide-nav">
         <a href="#about-me" class="nav-link">←</a>
-        <a href="#quote-essence" class="nav-link">→</a>
+        <a href="#chapter-rich-models" class="nav-link">→</a>
       </nav>
     </section>
 
+    <!-- ============================================================
+         CHAPTER 2: RICH DOMAIN MODELS
+         ============================================================ -->
+
     <!-- ================================================================
-         Quote: Essence
+         Chapter Divider: Rich Domain Models
          ================================================================ -->
-    <section class="slide slide--pattern" id="quote-essence">
+    <section class="slide slide--accent" id="chapter-rich-models">
       <div class="slide-inner">
-        <div class="quote">
-          <p class="quote-text">We care about reducing solutions to their essence.</p>
-          <p class="quote-author">Jorge Manrubia, 37signals</p>
-        </div>
+        <p class="chapter-label">Chapter 1</p>
+        <h2 class="slide-title slide-title--large">Rich Domain Models</h2>
+        <p class="slide-subtitle">Organizing behavior with concerns</p>
       </div>
 
       <nav class="slide-nav">
@@ -114,7 +121,7 @@
          ================================================================ -->
     <section class="slide slide--dark" id="domain-center">
       <div class="slide-inner">
-        <h2 class="slide-title">Rich domain objects</h2>
+        <h2 class="slide-title">The Epicenter Philosophy</h2>
 
         <p class="slide-text" style="margin-bottom: 2rem;">
           In ShapeUp we start with the epicenter and work our way out.<br>
@@ -136,24 +143,7 @@
       </div>
 
       <nav class="slide-nav">
-        <a href="#quote-essence" class="nav-link">←</a>
-        <a href="#quote-service-objects" class="nav-link">→</a>
-      </nav>
-    </section>
-
-    <!-- ================================================================
-         Quote: Service Objects
-         ================================================================ -->
-    <section class="slide slide--pattern" id="quote-service-objects">
-      <div class="slide-inner">
-        <div class="quote">
-          <p class="quote-text">Service objects are not meant to implement your business knowledge. They are meant to orchestrate your domain objects.</p>
-          <p class="quote-author">Jorge Manrubia</p>
-        </div>
-      </div>
-
-      <nav class="slide-nav">
-        <a href="#domain-center" class="nav-link">←</a>
+        <a href="#chapter-rich-models" class="nav-link">←</a>
         <a href="#code-card-model" class="nav-link">→</a>
       </nav>
     </section>
@@ -169,7 +159,7 @@
           <span class="code-filename">app/models/card.rb</span>
           <pre class="code-block"><code class="language-ruby">class Card < ApplicationRecord
   include Assignable, Closeable, Golden, Postponable,
-    Searchable, Taggable, Watchable
+    Searchable, Taggable, Triageable, Watchable
 
   belongs_to :board
   belongs_to :creator, class_name: "User"
@@ -188,7 +178,7 @@ end</code></pre>
       </div>
 
       <nav class="slide-nav">
-        <a href="#quote-service-objects" class="nav-link">←</a>
+        <a href="#domain-center" class="nav-link">←</a>
         <a href="#code-concern" class="nav-link">→</a>
       </nav>
     </section>
@@ -201,36 +191,183 @@ end</code></pre>
         <h2 class="slide-title">Traits as concerns</h2>
 
         <div class="code-container">
-          <span class="code-filename">app/models/card/golden.rb</span>
-          <pre class="code-block"><code class="language-ruby">module Card::Golden
+          <span class="code-filename">app/models/card/triageable.rb</span>
+          <pre class="code-block"><code class="language-ruby">module Card::Triageable
   extend ActiveSupport::Concern
 
   included do
-    has_one :goldness, dependent: :destroy
-    scope :golden, -> { joins(:goldness) }
+    scope :triaged, -> { active.where.not(column: nil) }
   end
 
-  def golden?
-    goldness.present?
+  def triaged?
+    active? && column.present?
   end
 
-  def gild
-    create_goldness! unless golden?
-  end
-
-  def ungild
-    goldness&.destroy
+  def send_back_to_triage
+    resume if postponed?
+    update! column: nil
+    track_event :sent_back_to_triage
   end
 end</code></pre>
         </div>
 
         <p class="slide-text">
-          Semantic method names: <code>gild</code> and <code>ungild</code>, not <code>call</code>.
+          Things that belong together, live together. Easy to understand, easy to maintain.
         </p>
       </div>
 
       <nav class="slide-nav">
         <a href="#code-card-model" class="nav-link">←</a>
+        <a href="#chapter-simpler-way" class="nav-link">→</a>
+      </nav>
+    </section>
+
+    <!-- ============================================================
+         CHAPTER 3: A SIMPLER WAY
+         ============================================================ -->
+
+    <!-- ================================================================
+         Chapter Divider: A Simpler Way
+         ================================================================ -->
+    <section class="slide slide--accent" id="chapter-simpler-way">
+      <div class="slide-inner">
+        <p class="chapter-label">Chapter 2</p>
+        <h2 class="slide-title slide-title--large">A Simpler Way</h2>
+        <p class="slide-subtitle">Code that reads like prose</p>
+      </div>
+
+      <nav class="slide-nav">
+        <a href="#code-concern" class="nav-link">←</a>
+        <a href="#quote-service-objects" class="nav-link">→</a>
+      </nav>
+    </section>
+
+    <!-- ================================================================
+         Quote: Service Objects
+         ================================================================ -->
+    <section class="slide slide--pattern" id="quote-service-objects">
+      <div class="slide-inner">
+        <div class="quote">
+          <p class="quote-text">Service objects are not meant to implement your business logic. They are meant to orchestrate your domain objects.</p>
+          <p class="quote-author">Jorge Manrubia, 37signals</p>
+        </div>
+      </div>
+
+      <nav class="slide-nav">
+        <a href="#chapter-simpler-way" class="nav-link">←</a>
+        <a href="#service-comparison" class="nav-link">→</a>
+      </nav>
+    </section>
+
+    <!-- ================================================================
+         Service Object Comparison
+         ================================================================ -->
+    <section class="slide slide--dark" id="service-comparison">
+      <div class="slide-inner">
+        <h2 class="slide-title">Boilerplate obscures intent</h2>
+
+        <div class="comparison">
+          <div class="comparison-side comparison-side--bad">
+            <h3>With a service object</h3>
+            <div class="code-container">
+              <pre class="code-block"><code class="language-ruby"># In the controller
+CardSendBackToTriage.call(card)
+
+# Separate class required
+class CardSendBackToTriage
+  def initialize(card)
+    @card = card
+  end
+
+  def call
+    @card.send_back_to_triage
+  end
+end</code></pre>
+            </div>
+          </div>
+
+          <div class="comparison-side comparison-side--good">
+            <h3>Directly on the domain</h3>
+            <div class="code-container">
+              <pre class="code-block"><code class="language-ruby"># In the controller
+card.send_back_to_triage
+
+
+
+
+# That's it.
+# The behavior lives
+# in the domain model
+# where it belongs.</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <p class="slide-text" style="margin-top: 1.5rem;">
+          The service object wraps one line of code with a whole class.<br>
+          The boilerplate draws attention away from the business logic.
+        </p>
+      </div>
+
+      <nav class="slide-nav">
+        <a href="#quote-service-objects" class="nav-link">←</a>
+        <a href="#semantic-naming" class="nav-link">→</a>
+      </nav>
+    </section>
+
+    <!-- ================================================================
+         Semantic Naming
+         ================================================================ -->
+    <section class="slide slide--dark" id="semantic-naming">
+      <div class="slide-inner">
+        <h2 class="slide-title">Semantic names over generic patterns</h2>
+
+        <div class="naming-examples">
+          <div class="naming-row">
+            <code class="naming-bad">CardGildingService.call(card)</code>
+            <span class="naming-arrow">→</span>
+            <code class="naming-good">card.gild</code>
+          </div>
+          <div class="naming-row">
+            <code class="naming-bad">ResumeCardOperation.new(card).execute</code>
+            <span class="naming-arrow">→</span>
+            <code class="naming-good">card.resume</code>
+          </div>
+          <div class="naming-row">
+            <code class="naming-bad">SignupService.call(params)</code>
+            <span class="naming-arrow">→</span>
+            <code class="naming-good">signup.create_identity</code>
+          </div>
+        </div>
+
+        <p class="slide-text" style="margin-top: 2rem;">
+          Generic verbs like <code>call</code> and <code>execute</code> say nothing about intent.<br>
+          Domain methods read like prose: <em>"The card is gilded. The signup creates an identity."</em>
+        </p>
+      </div>
+
+      <nav class="slide-nav">
+        <a href="#service-comparison" class="nav-link">←</a>
+        <a href="#chapter-orchestration" class="nav-link">→</a>
+      </nav>
+    </section>
+
+    <!-- ============================================================
+         CHAPTER 4: ORCHESTRATION & COMPOSITION
+         ============================================================ -->
+
+    <!-- ================================================================
+         Chapter Divider: Orchestration
+         ================================================================ -->
+    <section class="slide slide--accent" id="chapter-orchestration">
+      <div class="slide-inner">
+        <p class="chapter-label">Chapter 3</p>
+        <h2 class="slide-title slide-title--large">Orchestration</h2>
+        <p class="slide-subtitle">Controllers, jobs, and plain Ruby objects</p>
+      </div>
+
+      <nav class="slide-nav">
+        <a href="#semantic-naming" class="nav-link">←</a>
         <a href="#code-controller" class="nav-link">→</a>
       </nav>
     </section>
@@ -240,35 +377,29 @@ end</code></pre>
          ================================================================ -->
     <section class="slide slide--dark" id="code-controller">
       <div class="slide-inner">
-        <h2 class="slide-title">Controllers orchestrate</h2>
+        <h2 class="slide-title">Controllers orchestrate the domain</h2>
 
         <div class="code-container">
-          <span class="code-filename">app/controllers/signups_controller.rb</span>
-          <pre class="code-block"><code class="language-ruby">class SignupsController < ApplicationController
-  def new
-    @signup = Signup.new
-  end
-
-  def create
-    signup = Signup.new(signup_params)
-
-    if signup.valid?(:identity_creation)
-      redirect_to_session_magic_link signup.create_identity
-    else
-      head :unprocessable_entity
-    end
+          <span class="code-filename">app/controllers/cards/triages_controller.rb</span>
+          <pre class="code-block"><code class="language-ruby">class Cards::TriagesController < ApplicationController
+  def destroy
+    card.send_back_to_triage
   end
 end</code></pre>
         </div>
 
-        <p class="slide-text">
+        <p class="slide-text" style="margin-top: 1.5rem;">
           The controller connects domain objects with the external world.<br>
           This <em>is</em> the role of a service object—we just don't need a separate class.
+        </p>
+
+        <p class="slide-text" style="margin-top: 1rem; color: var(--tt-grey-43);">
+          Jobs work the same way: thin orchestration of domain logic.
         </p>
       </div>
 
       <nav class="slide-nav">
-        <a href="#code-concern" class="nav-link">←</a>
+        <a href="#chapter-orchestration" class="nav-link">←</a>
         <a href="#code-plain-ruby" class="nav-link">→</a>
       </nav>
     </section>
@@ -288,31 +419,69 @@ end</code></pre>
 
   attr_accessor :full_name, :email_address, :identity
 
-  validates :email_address, format: { with: URI::MailTo::EMAIL_REGEXP },
-    on: :identity_creation
-  validates :full_name, :identity, presence: true, on: :completion
+  validates :email_address, format: { with: URI::MailTo::EMAIL_REGEXP }
 
   def create_identity
-    @identity = Identity.find_or_create_by!(email_address: email_address)
+    @identity = Identity.find_or_create_by!(email_address:)
     @identity.send_magic_link for: :sign_up
-  end
-
-  def complete
-    valid?(:completion) && create_account
   end
 end</code></pre>
         </div>
 
         <p class="slide-text">
-          ActiveModel without persistence. A first-class domain object.
+          Not a service. Not persisted. A <em>domain operation</em> with a semantic name.<br>
+          We use ActiveModel, but it's just a plain Ruby object.
         </p>
       </div>
 
       <nav class="slide-nav">
         <a href="#code-controller" class="nav-link">←</a>
+        <a href="#concerns-composition" class="nav-link">→</a>
+      </nav>
+    </section>
+
+    <!-- ================================================================
+         Concerns + Composition
+         ================================================================ -->
+    <section class="slide slide--dark" id="concerns-composition">
+      <div class="slide-inner">
+        <h2 class="slide-title">Concerns + object composition</h2>
+
+        <p class="slide-text" style="margin-bottom: 2rem;">
+          Some say concerns oppose object-oriented design.<br>
+          In practice, they work beautifully together.
+        </p>
+
+        <div class="code-container">
+          <span class="code-filename">app/models/concerns/notifiable.rb</span>
+          <pre class="code-block"><code class="language-ruby">module Notifiable
+  extend ActiveSupport::Concern
+
+  included do
+    after_create_commit :notify_recipients_later
+  end
+
+  def notify_recipients_later
+    NotifyRecipientsJob.perform_later(self)
+  end
+end</code></pre>
+        </div>
+
+        <p class="slide-text" style="margin-top: 1.5rem;">
+          The concern defines <em>when</em> to notify. The job orchestrates <em>how</em>.<br>
+          You're encouraged to use both.
+        </p>
+      </div>
+
+      <nav class="slide-nav">
+        <a href="#code-plain-ruby" class="nav-link">←</a>
         <a href="#takeaways" class="nav-link">→</a>
       </nav>
     </section>
+
+    <!-- ============================================================
+         TAKEAWAYS
+         ============================================================ -->
 
     <!-- ================================================================
          Key Takeaways
@@ -323,10 +492,10 @@ end</code></pre>
 
         <ul class="takeaways">
           <li>Place the domain model at the center of your architecture</li>
-          <li>Service objects orchestrate—they don't hold business logic</li>
-          <li>Use concerns to organize traits and roles naturally</li>
+          <li>Use concerns to organize traits—things that belong together, together</li>
           <li>Prefer semantic names over generic patterns like <code>call</code></li>
-          <li>Plain Ruby objects + ActiveModel work beautifully</li>
+          <li>Controllers and jobs orchestrate; they don't hold business logic</li>
+          <li>Plain Ruby objects + ActiveModel work beautifully as domain models</li>
           <li>Prioritize what's coherent for humans over theoretical purity</li>
         </ul>
 
@@ -337,17 +506,17 @@ end</code></pre>
       </div>
 
       <nav class="slide-nav">
-        <a href="#epicenter" class="nav-link">←</a>
+        <a href="#concerns-composition" class="nav-link">←</a>
         <span class="nav-disabled">→</span>
       </nav>
     </section>
 
   </div>
-
+  
   <!-- Prism.js for syntax highlighting -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-ruby.min.js"></script>
-
+  
   <!-- Keyboard navigation -->
   <script src="keyboard.js"></script>
 </body>

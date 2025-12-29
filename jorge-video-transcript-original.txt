@@ -1,0 +1,561 @@
+Hi, this is Horge from 37 signals. So today I'm going to talk about uh how we
+0:07
+architect our rails applications. So last week was a special week because we
+0:12
+launched Fizzy. Fizzy is um our take on a campan tool. Um we launched it uh last
+0:20
+week. The reception has been phenomenal and uh something that made the launch
+0:26
+very special is that for the first time we released the source of the service uh
+0:32
+uh as an open source project. You can check in GitHub at basec camp uh fishy.
+0:39
+So you can um clone the project, you can check all the history of comets, pull
+0:45
+requests, everything is there. So I'm going to talk about some topics
+0:50
+I've written about. If you go to uh dev37s signals.com you will find our dev
+0:57
+blog and there you can find the code I like series which is a series of uh
+1:03
+articles I wrote about all these topics. Uh the central one is vanilla ra is plenty and there are other articles like
+1:10
+touching or expanding on on different uh aspects of of the whole idea. When we
+1:16
+talk about banilla rails, we actually refer to two things. One thing is our preference for um our preference for uh
+1:25
+not using uh third-party dependencies and going with rails defaults. So for
+1:30
+example, we go with rails uh um view helpers and templates instead of view
+1:36
+components or we prefer minest to ourspec. Uh that's one side of the
+1:42
+equation. The other side of the equation is that we uh architecturally speaking,
+1:48
+we don't add uh new artifacts to what Rails and Ruby already provide when uh
+1:56
+architecting our applications. Okay. So, I'm going to focus on this uh latter
+2:01
+side of the binar rails equation. And uh well since Fizzy is open source
+2:07
+like it's a great opportunity to discuss these topics uh you know looking at
+2:12
+actual code and actual interactions and seeing how the application works. So I'm going to show like different um
+2:20
+different parts of the applications of the application to make different points. Uh so I'm going to start with
+2:26
+the first one and for the first one uh let me open the inspector tools. Uh I'm
+2:34
+going to show you how to drag. I'm going to drag a column from uh this is running
+2:40
+locally in my box. This is the uh cloned project from GitHub. I'm going to drag
+2:46
+uh a card from one column to the uh maybe column. Okay. And I want to
+2:53
+show you what happens. Okay. So this is uh sending like a post request to this
+3:01
+endpoint that I'm going to open. So this is like uh dropping the card number
+3:07
+seven at the string column. That's what the resource is representing.
+3:13
+If we go to the code base, I'm going to open that controller. Oh, sorry. It's
+3:20
+not here. It's here. Streams controller. Um
+3:27
+inside drops. Okay. So I wanted to open that this file. Okay. So,
+3:35
+so from an architectural point of view, and by the way, this is uh something this is an approach I've learned at 37
+3:43
+signals. Okay. So, this is the credit should go to David and and other amazing
+3:48
+parameters in the company such as Jeffrey Hardy. I'm just trying to articulate what I understand the 37
+3:54
+signals approaches. And the 37 signals approach is not that u radical or
+4:01
+revolutionary. See the 37 signals approach is about
+4:06
+placing the domain model at the center. Okay. So the domain model of your
+4:11
+application is the central part of your application and this is the core idea in
+4:17
+domain driving design. the movement and uh the paradigm that was popularized in
+4:24
+the early 2000s uh in in the book um domain driving design by Eric Evans. I
+4:30
+know that book had a tremendous influence on David back in the day because it's it's a book he often
+4:36
+recommends and that's what the book recommends like make the domain model
+4:42
+the central part of your application meaning that you should put you know
+4:48
+most of your effort on making that your code evoke uh the problem you are trying
+4:53
+to solve right so in this case this is a campan tool so we try that our domain
+4:59
+model uh reflect like the behaviors and the nouns we are using when we are
+5:05
+discussing the product. Um
+5:10
+so if you make the domain model the central part of your application
+5:16
+a key question is how do you connect the external world with your domain model?
+5:21
+So um that's what in a rails application um that's what you
+5:30
+that's a question that you can answer uh at different parts of the application the most typical part are rails
+5:37
+controllers right in a rails application rails controllers are what connect like web requests with your application so if
+5:44
+you check our rails controllers you will normally see like very thin controllers
+5:52
+exercising directly our domain model invoking some business logic that you
+5:58
+need to invoke to satisfy the needs for the request. So in this case for example
+6:04
+in this case we are dropping a card in a column. So you will find this is the
+6:10
+business logic we are exercising. We are saying card send back this card. I'm I'm
+6:17
+we are sending the message send back to triage to discard. Okay. So that's what
+6:23
+you will find in most of our controllers. Well, another typical scenario is more
+6:30
+simpler scenarios like for example if we go to the comment controller. Um
+6:37
+so when you for example when you create a comment in a card or when you update a comment in a card um you will find like
+6:45
+this is like pretty vanilla uh scaffolding rails code. We are just
+6:51
+updating or creating the record directly with totally does the job when the
+6:56
+interaction is as simple as that. So if you want to store some data in the database, some record in the database,
+7:02
+totally fine to use active record to just do that. But it's quite often the
+7:07
+case that we need to do something more complex. So in that case, we want to to see that domain logic encapsulated in
+7:14
+the domain model and we exercise it directly from the race controllers. And
+7:21
+this is uh the subject uh of in my opinion a controversy that is not really
+7:27
+justified which is like the the whole debate about service objects. Okay,
+7:33
+application service objects and uh I think the the I think it shouldn't be as
+7:40
+controversial because essentially I mean if you go to DDD and if you use
+7:46
+application level service objects properly so the idea of a service objects is that you build this
+7:52
+application layer that connects this the external world with your application okay so uh that's exactly the role that
+8:01
+rails controllers fulfill right but domain driving design was written before
+8:07
+even rails existed. So its proposal was to use service objects and service
+8:13
+objects uh in theory or in the original proposal of DDD should do exactly what
+8:19
+we are doing here. They should orchestrate how you invoke how you orchestrate um domain entities to
+8:26
+satisfies your business logic needs um at a high level or also they should
+8:32
+contain like infrastructure um code such as for example persistence in the case
+8:37
+you are separating the persistence concerns from your domain model. So applica the application layer is in
+8:43
+charge of dealing with that persistence. So let's write this in code for a second
+8:49
+because I want to make a point that I think is important. So imagine that instead of sending the message send back
+8:55
+to triage, we were using a service object here. So I could say something
+9:01
+like I don't know cart send back to triage. Okay, something like this. I'm
+9:06
+creating a new service object send back to triage and I'm invoking it on the card. Uh
+9:13
+I'm going to create the service object. This is helping me a bit. Uh I don't
+9:19
+want this. Imagine that I create a constructor for that. And that now I'm going to write
+9:24
+the call method. Okay. See like uh the LLM is completing that uh and kind of
+9:32
+enforcing the point I want to make. If we were using a service object in the
+9:37
+way DDD proposes you should use a service object, it will be like this. So
+9:43
+we would have replaced the single line for a service object that invokes that
+9:49
+single line because service objects are not meant to implement your business
+9:54
+logic. Service service service objects are meant to orchestrate the entities in
+10:00
+their domain model that implement your business logic which is completely different. Okay. So you want your rails
+10:07
+controller to remain thing and you want your service objects if you are using
+10:13
+them to remain thing. Okay. uh that's why I don't really understand the controversy or I don't really understand
+10:20
+how would you how you would justify the service objects are such a life-changing idea right because they are fulfilling
+10:27
+the same role that race controllers are already fulfilling which is
+10:32
+orchestrating at a very high level what the service world what the domain your domain objects do. Uh now if you were
+10:40
+not using active record and you were using an alternative approach to active record where persistence is completely
+10:47
+separated from um your your business uh sorry your domain model then yeah here
+10:55
+you maybe you would have a card repository or data data access object when you say
+11:02
+okay save me the card and maybe the the framework you're using is tracking the changes in memory. or whatever and you
+11:09
+will persist them like that. That's a whole different discussion that I might I might touch on other video. We use
+11:17
+active record. We don't need that. uh in our case with this approach if we if
+11:24
+you're using Rails controller like this service object in most cases are uh
+11:31
+boilerplate code because you are just wrapping one line of code or two lines
+11:36
+of code or three lines of code with a whole class to achieve not much benefit
+11:44
+but if that's your thing I respect it uh please use them we don't we don't
+11:50
+because we actually we care about boiler plate. We we care about reducing solutions to its essence. And I think
+11:56
+this is like a worse design uh and worse overall quality. But it's not such a big
+12:03
+deal. Okay. What's the big deal with service objects? The big deal with service objects is when you propose to
+12:10
+use service objects to contain your domain logic. Okay. So if we went uh
+12:18
+here to uh the move back to triage method
+12:23
+um this is not finding it. One second.
+12:29
+It's no sorry it's it's in um
+12:35
+triageable concern. It's here. Okay. Send back to triage method is here. I don't know why Ruby mind wasn't
+12:40
+navigating to it. So so yes. So if you take this uh code and
+12:48
+you say okay the service object is going to implement that code right. So uh we
+12:55
+are going to do this in the service object and of course because we are using service objects instead of sending
+13:01
+the message resume to the cart to make sure it's not postponed uh we are going
+13:06
+to say cart uh I don't know resume
+13:12
+uh okay I'm going to invoke that service object too so suddenly so if you do that
+13:18
+with which surprisingly is the is the advice I the uh service objects
+13:24
+defenders advocate for over and over which is implement your domain logic um
+13:30
+your business logic sorry in the application layer of your application
+13:35
+then you are making your uh domain
+13:40
+models your domain entities you are um making them empty regarding behavior and
+13:48
+you are making them data holders which is a problem which should not be I mean
+13:53
+this should not be controversial because this is a problem that has been known for years is is a problem that was
+13:58
+highlighted by Eric Evans in the original DDD book I've seen this problem discussed in every DD book I've read uh
+14:06
+Martin Fer wrote a very famous seinal article called anomic domain models in
+14:12
+2003 I believe uh before rails was even published and and they talk about this
+14:18
+problem because many folks end up doing this, doing this. And if you do this,
+14:24
+you suddenly are opening a, you know, a full can of worms uh in terms of um
+14:31
+design problems because this is a poor design. Instead of having a proper domain model, what you now have is a
+14:38
+very flat long list of small operations where you either don't reuse code or you
+14:46
+create a lot of coupling within between service objects to satisfy your domain
+14:52
+needs. It's going to be very very messy. So uh
+14:58
+yes at least if you I think it's important that at least if you want to use service objects at least you should
+15:03
+have in mind what's the idea with service objects and the idea is not implementing your business logic you
+15:09
+should it should be orchestrating like one two uh domain entities three domain
+15:15
+entities to to per to to perform some um operation now in our case as I said we
+15:22
+don't to do this we just uh uh do things we just interact with the domain model
+15:29
+from the controller. in this case is one line which is the most common case along
+15:34
+with uh what I show you in the comments controller case like interacting with the records directly in some of the
+15:41
+cases like for example when you uh in the B controller I was looking today
+15:47
+sorry not here BS controller here uh um
+15:54
+I was looking today for examples of controllers like doing more than one line of code on the domain model. This
+16:01
+is one of them. So when you update a bolt in in fizzy uh you update the bolt
+16:09
+params and then you uh invoke this revise method on the uh accesses
+16:14
+association to grant and revoke permissions for the list of users you submit with the with the form. In this
+16:21
+case, it's a controller. It's two lines of code. Uh the important thing to me is that it's exercising domain logic about
+16:29
+how to review permissions at the domain level. Now if you want to do this here
+16:35
+for us is totally fine. If you want to extract a service object a service
+16:40
+object with these two lines of code that's still fine. If you want to create a form object to do this that's fine
+16:48
+too. But please um don't advocate for implementing the
+16:55
+domain logic in service objects. That's a that's a I think something especially
+17:01
+the folks that don't have much experience and then following the advice of service objects are your the solution
+17:08
+to all your problems. They are not they actually if you don't know how to use them you I think you are going to end in a in a worse place that that the place
+17:15
+you started at. Um so in our case controllers exercise the
+17:23
+domain models directly. Um sometimes for I was going to say just another example
+17:28
+which is a sessions controller. Um in this case uh so there is a path here
+17:35
+where we are creating a new signup uh in the system and to do that we are
+17:41
+invoking this signup operation sorry this signup object where we invoke this
+17:46
+create identity uh to create an identity in the system so that you can that's
+17:52
+actually like creating the user in the system. So this is not I mean this is
+17:57
+not an active record object at all like we use a lot of plain Ruby objects. So
+18:04
+we don't discriminate within between active record objects or regular plain
+18:10
+Ruby objects. But in this case the point I want to make is that sign up is not I
+18:15
+mean it's not a domain entity. It's not identified is it's more like an operation
+18:21
+um a domain operation that we want to satisfy that we can't satisfy sending a message to an entity. In that case, it's
+18:28
+totally fine to create a this will be like a domain service in DDD, but it's
+18:34
+totally fine to get those objects in place. We try to we don't use the the
+18:40
+term service. We don't call them signup service and we don't have methods like call. We prefer to use more semantic
+18:47
+terms like signup dot create identity. That looks sounds better for us. But
+18:53
+other than that, yeah, we we are using services. I mean, if we have to represent a domain operation that
+19:00
+doesn't fit in an entity, we create a object for that. And you know, that's kind of a service if you want. Uh but
+19:07
+what you get are controllers with little um little code
+19:14
+orchestration or orchestrating uh domain level behavior at a very high level.
+19:20
+That's our that's our uh what we try to do and the most typical case you will
+19:26
+find in our in our controllers is this. Okay. So um now
+19:33
+if you if you go with this approach, one problem uh some people complain about
+19:39
+and rightfully is that hey but if we place a lot of behavior in our models,
+19:46
+there are certain models that are going to be so big so doing so many things
+19:53
+that are going to violate the single responsibility principle in so many ways that this is going to be a maintenance
+19:59
+hell. Okay. And in that regards we I can share some techniques we use.
+20:07
+So um the first technique I want to talk about are concerns. Okay. So concerns if we go
+20:15
+to this send back to triage uh model we can see that that's uh that's in a uh in
+20:22
+a card triageible concern which is in the card folder in the mo in the models
+20:29
+folder. So if we open the card model uh you will find the triable concern there
+20:37
+right um the triable concern there. So what we are doing
+20:43
+so we use concerns in two ways. Okay. um in in in our codebase. One way is uh
+20:51
+like this case we are showing here we use concerns um to compose
+20:58
+um to compose traits traits or roles
+21:06
+um in certain domain models to organize those the behavior corresponding those
+21:13
+traits or roles. uh to organize th those behaviors in cohesive units okay that
+21:20
+are contained that are contained that slice of business logic for that uh
+21:26
+domain entity. So that's that's one way in which we use roles. So for example
+21:32
+here in a card we can find that a card is postponable. So if you if you go to
+21:38
+that concern you will find well in this case scopes and an association and certain methods that are related to
+21:46
+postponing or resuming cards. If you go to the triangible concern we were at
+21:53
+those are well the same association scopes methods that are related to uh
+21:58
+the this slice of functionality. And the first thing you get by doing this, I
+22:03
+mean there is an obvious advantage which is that you can organize large API
+22:09
+surfaces uh in smallers in smaller units of units of code that they are easy to
+22:16
+maintain and reason about. So for example, if uh I can go to the
+22:21
+triageable test where I have the tests organized for this trait of cards of
+22:27
+being triageable, that's a an advantage. uh on a higher level a big advantage is
+22:32
+that you get this high level module um cohesion um in your code. So um by doing
+22:42
+this I can go to this triable concern and I get things that belong together
+22:47
+together in the same file. So for example, I can get the triage scope that
+22:53
+is saying, oh, this is query the cards that are active that have a column and
+22:58
+then I have this query method triage that is checking the same thing. So if I
+23:04
+went to change this condition, I want to change this condition. So it's very very
+23:10
+handy that they are together, right? It makes sense for me as a human who is trying to alter the system or trying to
+23:16
+understand the system. that's cohesiveness of the kind you want to see in your your codebase. So um that's an
+23:24
+advantage. Another advantage is that they are very lightweight. It's a matter of uh um you don't need to create new
+23:31
+hierarchies of of objects or new instances. You can you don't need to define this role object that wraps the
+23:38
+original object to decorate it. This is lighter than that. uh if I go to the
+23:44
+card uh object I have like this triageable concern which is a single
+23:50
+file and it's injecting this behavior relating to bin triage things are organized it's easy to understand it's
+23:57
+cohesive uh we use them a lot so that's one day we sorry one way we use concerns
+24:05
+uh another way we use uh but by by the way this is not to mean that we organize
+24:13
+all the behavior in all the classes with concerns so that you can place behavior
+24:18
+in the in the main class right uh we so in this case in the case of card card is
+24:24
+like bold those are those these are central entities in our domain model so
+24:30
+they have a lot of behavior and um they have a lot of concerns in other cases
+24:36
+you won't find this I I don't know uh well user user is another kind of
+24:41
+central part um or or central entity. Um if I go to let me check another for
+24:49
+example identity identity is only mixing two concerns. It's totally fine to have
+24:54
+like a main uh a main body of methods in
+25:00
+in domain models by by default and using concerns for kind of um secondary traits
+25:09
+or relevant traits but that are not related to are not that much related to
+25:14
+the core of what the entity model is trying to to do. But in the case of
+25:20
+central uh entities, you will find a lot of concerns because uh they are very very handy
+25:26
+you know when you have a lot of methods to try to keep those organized. Okay.
+25:32
+But so this is a case of using uh one one way we use concerns. Another way of
+25:37
+using concerns is the original mixing u notion in Ruby which is a way of sharing
+25:44
+code among classes. So that's we use consens in that way too. So if we went
+25:50
+to the streams controllers that we were originally at the controller layer uh we
+25:55
+have this cardcoped concerned that we are using uh at many
+26:03
+places as you can see we are using card scope uh this card scope in many controllers and this is essentially
+26:09
+injecting this before action to set the board so that sorry to set the board and to set the card so that you can use the
+26:16
+card directly by just including including the concern. That's one way of using them. We also do this at the model
+26:23
+level, but not um I mean this is um we don't do this as much at the model level, but we definitely do.
+26:31
+So um uh for example, I'm going to show you something here. If um if I grab a
+26:38
+card and I say uh hey Jason
+26:44
+and I send a message for JSON. Oh the problem is that let me clear this
+26:50
+notifications because the notification was already there. So uh JSON hey there.
+26:57
+So yeah you can see how this was uh this showed up here. Right. So why that
+27:04
+happened? uh what why this h how this happened right um if I go so that's
+27:11
+that's submitting the comment we have a system in place that is extracting the mention and creating the mention model
+27:17
+this mention model includes this notifiable concern which is the second
+27:23
+uh code reuse scenario I was talking about if we check the not notifiable concern it's in the concerns folder and
+27:33
+uh we can find that uh events and also
+27:39
+um mentions are mentions and mentions are and events are two notifiable
+27:45
+objects. Okay. Now, sometimes when folks talk about concerns, they kind of oppose
+27:53
+concerns to to other techniques as if they were opposing um alternatives like
+28:00
+should you use concerns or should you use object composition? Should you use
+28:05
+concerns or should you use I don't know service objects. The thing is that
+28:11
+concerns um are a fantastic way of organizing like
+28:16
+large API surfaces in a way in a cohesive way. But concerns play very
+28:23
+well with object uh orientation techniques. Um so for example the fact
+28:30
+that you use concerns uh is not an an an obstacle to
+28:37
+building um systems of objects for example that you can compose to satisfy
+28:43
+one of those highle methods that you are exposing through your domain entities. So you can combine you can totally
+28:49
+combine object-oriented programming object composition with concerns and actually that's what we do. Um I'm going
+28:57
+to explain this with u with with a couple of examples uh that are also tied
+29:03
+to to to using callbacks in this case coincidentally. So we can talk about callbacks too. So uh this notifiable um
+29:11
+concern that we were using to reuse code is inserting this after create comet uh
+29:16
+notify recipients later um callback. So this is invoking this method and this
+29:21
+method is invoking this job. Uh if we go to the job we can find um again this is
+29:29
+like a controller to us. This is exercising the domain model from the boundaries of the system in this case to
+29:35
+execute some domain model logic as synchronously but it's the same we want
+29:41
+to see like a thin job just invoking some domain entity code. That's what we that what you would
+29:48
+normally find in our jobs. So it's kind of the same. We are exercising the domain model from the boundaries of the
+29:55
+system. Same if we were in the in a race console, same if we were in a script. That's what we want to see. So we are
+30:02
+getting a notify of object and we are sending the notify recipients message. Now if we go here you can see how the

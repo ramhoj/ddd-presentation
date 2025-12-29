@@ -488,6 +488,27 @@ body:has(.slide:target) .slide:not(:target) {
 }
 
 /* =============================================================================
+   CHAPTER DIVIDERS
+   ============================================================================= */
+
+.chapter-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0 0 var(--space-md);
+}
+
+.slide--accent .slide-title {
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+}
+
+.slide--accent .slide-subtitle {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* =============================================================================
    DDD PRINCIPLES SLIDE
    ============================================================================= */
 
@@ -537,6 +558,102 @@ body:has(.slide:target) .slide:not(:target) {
 @media (max-width: 768px) {
   .ddd-principles {
     grid-template-columns: 1fr;
+  }
+}
+
+/* =============================================================================
+   COMPARISON LAYOUT
+   ============================================================================= */
+
+.comparison {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-lg);
+  width: 100%;
+  max-width: 1000px;
+  text-align: left;
+}
+
+.comparison-side h3 {
+  font-size: 1rem;
+  margin: 0 0 var(--space-sm);
+  font-weight: 600;
+}
+
+.comparison-side--bad h3 {
+  color: #ea8d98;
+}
+
+.comparison-side--good h3 {
+  color: var(--tt-lime);
+}
+
+.comparison-side .code-container {
+  margin: 0;
+}
+
+.comparison-side .code-block {
+  font-size: 0.85rem;
+}
+
+@media (max-width: 900px) {
+  .comparison {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =============================================================================
+   NAMING EXAMPLES
+   ============================================================================= */
+
+.naming-examples {
+  max-width: 800px;
+  margin: var(--space-xl) auto;
+}
+
+.naming-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.naming-bad,
+.naming-good {
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  padding: var(--space-sm) var(--space-md);
+  border-radius: 6px;
+  font-size: clamp(0.85rem, 1.2vw, 1rem);
+}
+
+.naming-bad {
+  background: rgba(234, 141, 152, 0.15);
+  color: #ea8d98;
+  text-decoration: line-through;
+  text-decoration-color: rgba(234, 141, 152, 0.5);
+}
+
+.naming-good {
+  background: rgba(126, 211, 33, 0.15);
+  color: var(--tt-lime);
+  font-weight: 500;
+}
+
+.naming-arrow {
+  color: var(--tt-grey-43);
+  font-size: 1.2rem;
+}
+
+@media (max-width: 600px) {
+  .naming-row {
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+  
+  .naming-arrow {
+    transform: rotate(90deg);
   }
 }
 
