@@ -76,11 +76,8 @@ function getCurrentSlide() {
   return document.querySelector('.slide:first-of-type')
 }
 
-// Set CSS variable for total slide count (used by counter display)
+// Set up slide counter and other initializations
 document.addEventListener('DOMContentLoaded', () => {
-  const total = document.querySelectorAll('.slide').length
-  document.documentElement.style.setProperty('--total-slides', `"${total}"`)
-
   // Initialize code tabs
   initCodeTabs()
 
@@ -90,14 +87,29 @@ document.addEventListener('DOMContentLoaded', () => {
     notesToggle.addEventListener('click', toggleNotes)
   }
 
+  // Initialize slide counter
+  updateSlideCounter()
+
   // Run Prism highlighting after DOM is ready
   if (typeof Prism !== 'undefined') {
     Prism.highlightAll()
   }
 })
 
-// Re-highlight code when navigating (hash change)
+// Update slide counter display
+function updateSlideCounter() {
+  const slides = document.querySelectorAll('.slide')
+  const total = slides.length
+  const currentIndex = getCurrentSlideIndex(Array.from(slides)) + 1
+  const counter = document.getElementById('slide-counter')
+  if (counter) {
+    counter.textContent = `${currentIndex} / ${total}`
+  }
+}
+
+// Re-highlight code and update counter when navigating (hash change)
 window.addEventListener('hashchange', () => {
+  updateSlideCounter()
   if (typeof Prism !== 'undefined') {
     // Small delay to ensure the slide is visible
     setTimeout(() => Prism.highlightAll(), 50)
