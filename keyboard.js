@@ -2,10 +2,14 @@
 // Works with semantic IDs - no numbered slides required
 
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+  if (e.key === 'ArrowRight') {
     navigate(1)
-  } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+  } else if (e.key === 'ArrowLeft') {
     navigate(-1)
+  } else if (e.key === 'ArrowDown') {
+    navigateTabs(1)
+  } else if (e.key === 'ArrowUp') {
+    navigateTabs(-1)
   } else if (e.key >= '1' && e.key <= '9') {
     goToSlide(parseInt(e.key, 10))
   } else if (e.key === '0') {
@@ -43,6 +47,33 @@ function getCurrentSlideIndex(slides) {
 // Toggle speaker notes visibility
 function toggleNotes() {
   document.body.classList.toggle('notes-hidden')
+}
+
+// Navigate between tabs on the current slide
+function navigateTabs(direction) {
+  const currentSlide = getCurrentSlide()
+  if (!currentSlide) return
+
+  const tabGroup = currentSlide.querySelector('.code-tabs')
+  if (!tabGroup) return
+
+  const tabs = Array.from(tabGroup.querySelectorAll('.code-tab'))
+  if (tabs.length === 0) return
+
+  const activeIndex = tabs.findIndex(tab => tab.classList.contains('active'))
+  const nextIndex = activeIndex + direction
+
+  if (nextIndex >= 0 && nextIndex < tabs.length) {
+    tabs[nextIndex].click()
+  }
+}
+
+function getCurrentSlide() {
+  const hash = window.location.hash.slice(1)
+  if (hash) {
+    return document.getElementById(hash)
+  }
+  return document.querySelector('.slide:first-of-type')
 }
 
 // Set CSS variable for total slide count (used by counter display)
