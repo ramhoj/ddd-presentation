@@ -717,6 +717,49 @@ body:has(.slide:target) .slide:not(:target) {
   border-radius: 8px;
 }
 
+/* Responsive: Stack tabs vertically on small screens */
+@media (max-width: 600px) {
+  .code-tabs-nav {
+    flex-direction: column;
+    gap: 0;
+    border: 1px solid var(--tt-grey-78);
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+  }
+
+  .code-tab {
+    border-radius: 0;
+    text-align: left;
+    padding: var(--space-sm) var(--space-md);
+    font-size: 0.7rem;
+    border: none;
+  }
+
+  .code-tab:not(:last-child) {
+    border-bottom: 1px solid var(--tt-grey-78);
+  }
+
+  .code-tab:first-child {
+    border-radius: 7px 7px 0 0;
+  }
+
+  .code-tab.active {
+    background: var(--tt-grey-84);
+    color: var(--tt-grey-13);
+  }
+
+  .code-tab-content {
+    border-radius: 0 0 8px 8px;
+    border-top: none;
+    padding: var(--space-md);
+  }
+
+  .code-tab-content .code-block {
+    border-radius: 8px;
+    font-size: 0.75rem;
+  }
+}
+
 /* =============================================================================
    COMPARISON LAYOUT
    ============================================================================= */
