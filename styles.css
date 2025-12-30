@@ -1073,6 +1073,15 @@ body.notes-hidden .speaker-notes {
   z-index: 100;
   font-family: var(--font-family);
   letter-spacing: 0.03em;
+  /* Hidden by default - shown on touch devices via media query */
+  display: none;
+}
+
+/* Show notes toggle only on touch devices (no physical keyboard) */
+@media (pointer: coarse) {
+  .notes-toggle {
+    display: block;
+  }
 }
 
 .notes-toggle:hover {
@@ -1087,6 +1096,59 @@ body.notes-hidden .speaker-notes {
 
 body.notes-hidden .notes-toggle {
   border-style: dashed;
+}
+
+/* =============================================================================
+   RESOURCES LIST
+   ============================================================================= */
+
+.resources-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  max-width: 600px;
+  margin: var(--space-xl) auto;
+}
+
+.resource-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  background: var(--tt-grey-78);
+  border-radius: 12px;
+  text-decoration: none;
+  color: var(--tt-white);
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.resource-link:hover {
+  background: var(--tt-grey-64);
+  border-color: var(--tt-primary);
+  transform: translateX(4px);
+}
+
+.resource-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.resource-text {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.resource-text strong {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.resource-url {
+  font-size: 0.85rem;
+  color: var(--tt-grey-43);
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
 }
 
 /* =============================================================================
