@@ -10,6 +10,8 @@ document.addEventListener('keydown', (e) => {
     goToSlide(parseInt(e.key, 10))
   } else if (e.key === '0') {
     goToSlide(10)
+  } else if (e.key === 'n' || e.key === 'N') {
+    toggleNotes()
   }
 })
 
@@ -38,6 +40,11 @@ function getCurrentSlideIndex(slides) {
   return index === -1 ? 0 : index
 }
 
+// Toggle speaker notes visibility
+function toggleNotes() {
+  document.body.classList.toggle('notes-hidden')
+}
+
 // Set CSS variable for total slide count (used by counter display)
 document.addEventListener('DOMContentLoaded', () => {
   const total = document.querySelectorAll('.slide').length
@@ -45,6 +52,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Initialize code tabs
   initCodeTabs()
+
+  // Initialize notes toggle button
+  const notesToggle = document.getElementById('notes-toggle')
+  if (notesToggle) {
+    notesToggle.addEventListener('click', toggleNotes)
+  }
 
   // Run Prism highlighting after DOM is ready
   if (typeof Prism !== 'undefined') {
