@@ -16,6 +16,8 @@ document.addEventListener('keydown', (e) => {
     goToSlide(10)
   } else if (e.key === 'n' || e.key === 'N') {
     toggleNotes()
+  } else if (e.key === 't' || e.key === 'T') {
+    toggleTrainingMode()
   }
 })
 
@@ -47,6 +49,15 @@ function getCurrentSlideIndex(slides) {
 // Toggle speaker notes visibility
 function toggleNotes() {
   document.body.classList.toggle('notes-hidden')
+}
+
+// Toggle training mode (large notes overlay)
+function toggleTrainingMode() {
+  // If notes are hidden, show them first
+  if (document.body.classList.contains('notes-hidden')) {
+    document.body.classList.remove('notes-hidden')
+  }
+  document.body.classList.toggle('training-mode')
 }
 
 // Navigate between tabs on the current slide

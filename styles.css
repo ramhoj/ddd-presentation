@@ -1052,6 +1052,60 @@ body.notes-hidden .speaker-notes {
   overflow: hidden;
 }
 
+/* Training mode - large notes overlay (T key) */
+body.training-mode .speaker-notes {
+  position: fixed;
+  bottom: var(--space-lg);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 1000px;
+  max-height: 40vh;
+  overflow-y: auto;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  padding: var(--space-lg);
+  background: rgba(0, 0, 0, 0.85);
+  border: 1px solid var(--tt-grey-64);
+  border-radius: 12px;
+  opacity: 1;
+  color: var(--tt-grey-13);
+  z-index: 200;
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
+  margin: 0;
+}
+
+/* Hide training mode notes when notes-hidden is also active */
+body.notes-hidden.training-mode .speaker-notes {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Training mode on mobile - full screen notes for teleprompter use */
+@media (max-width: 768px) {
+  body.training-mode .speaker-notes {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    max-width: none;
+    max-height: none;
+    height: 100vh;
+    transform: none;
+    border-radius: 0;
+    border: none;
+    font-size: 1.3rem;
+    line-height: 1.8;
+    padding: var(--space-xl);
+    background: var(--tt-grey-89);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+}
+
 /* =============================================================================
    NOTES TOGGLE BUTTON
    ============================================================================= */
