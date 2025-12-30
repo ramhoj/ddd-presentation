@@ -905,11 +905,12 @@ body:has(.slide:target) .slide:not(:target) {
    ============================================================================= */
 
 .slide-nav {
-  position: absolute;
+  position: fixed;
   bottom: var(--space-lg);
   right: var(--space-lg);
   display: flex;
   gap: var(--space-sm);
+  z-index: 50;
 }
 
 .nav-link,
