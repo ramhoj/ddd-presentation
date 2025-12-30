@@ -87,8 +87,10 @@ document.addEventListener('DOMContentLoaded', () => {
     notesToggle.addEventListener('click', toggleNotes)
   }
 
-  // Initialize slide counter
+  // Initialize slide counter, navigation, and notes toggle visibility
   updateSlideCounter()
+  updateNavigation()
+  updateNotesToggleVisibility()
 
   // Run Prism highlighting after DOM is ready
   if (typeof Prism !== 'undefined') {
@@ -107,9 +109,53 @@ function updateSlideCounter() {
   }
 }
 
-// Re-highlight code and update counter when navigating (hash change)
+// Update navigation links based on current slide
+function updateNavigation() {
+  const slides = Array.from(document.querySelectorAll('.slide'))
+  const currentIndex = getCurrentSlideIndex(slides)
+  const prevBtn = document.getElementById('nav-prev')
+  const nextBtn = document.getElementById('nav-next')
+
+  if (prevBtn) {
+    if (currentIndex > 0) {
+      prevBtn.href = `#${slides[currentIndex - 1].id}`
+      prevBtn.classList.remove('nav-disabled')
+      prevBtn.classList.add('nav-link')
+    } else {
+      prevBtn.removeAttribute('href')
+      prevBtn.classList.add('nav-disabled')
+      prevBtn.classList.remove('nav-link')
+    }
+  }
+
+  if (nextBtn) {
+    if (currentIndex < slides.length - 1) {
+      nextBtn.href = `#${slides[currentIndex + 1].id}`
+      nextBtn.classList.remove('nav-disabled')
+      nextBtn.classList.add('nav-link')
+    } else {
+      nextBtn.removeAttribute('href')
+      nextBtn.classList.add('nav-disabled')
+      nextBtn.classList.remove('nav-link')
+    }
+  }
+}
+
+// Update notes toggle visibility based on current slide
+function updateNotesToggleVisibility() {
+  const currentSlide = getCurrentSlide()
+  const notesToggle = document.getElementById('notes-toggle')
+  if (!notesToggle) return
+
+  const hasNotes = currentSlide && currentSlide.querySelector('.speaker-notes')
+  notesToggle.style.display = hasNotes ? '' : 'none'
+}
+
+// Re-highlight code and update UI when navigating (hash change)
 window.addEventListener('hashchange', () => {
   updateSlideCounter()
+  updateNavigation()
+  updateNotesToggleVisibility()
   if (typeof Prism !== 'undefined') {
     // Small delay to ensure the slide is visible
     setTimeout(() => Prism.highlightAll(), 50)
