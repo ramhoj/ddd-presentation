@@ -659,6 +659,8 @@ body:has(.slide:target) .slide:not(:target) {
   max-width: 1100px;
   margin: var(--space-lg) auto;
   text-align: left;
+  container-type: inline-size;
+  container-name: code-tabs;
 }
 
 .code-tabs-nav {
@@ -717,8 +719,8 @@ body:has(.slide:target) .slide:not(:target) {
   border-radius: 8px;
 }
 
-/* Responsive: Stack tabs vertically on small screens */
-@media (max-width: 600px) {
+/* Responsive: Stack tabs vertically when container is narrow */
+@container code-tabs (max-width: 750px) {
   .code-tabs-nav {
     flex-direction: column;
     gap: 0;
@@ -731,8 +733,11 @@ body:has(.slide:target) .slide:not(:target) {
     border-radius: 0;
     text-align: left;
     padding: var(--space-sm) var(--space-md);
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     border: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .code-tab:not(:last-child) {
