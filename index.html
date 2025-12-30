@@ -52,15 +52,15 @@
         </div>
 
         <p class="speaker-notes">
-          I'm the new developer on the product team in Gothenburg.
+          So, I'm the new developer on the product team here in Gothenburg.
           <br><br>
-          Prior to joining Teamtailor three weeks ago, I spent three years at 37signals working on Basecamp and HEY.
+          Before joining Teamtailor three weeks ago, I spent three years at 37signals working on Basecamp and HEY.
           <br><br>
-          37signals have a lot of strong preferences when it comes to code design and some of you might have seen Jorge Manrubia talk about it in his Fizzy presentation recently.
+          As you probably know, they have a lot of strong preferences when it comes to code design, and some of you might have seen Jorge Manrubia talk about some of them in his Fizzy presentation recently.
           <br><br>
-          I wanted to take the opportunity to share some of these ideas for those who haven't had a chance to watch Jorge's presentation yet, as well as trying to answer any questions you might have from watching it.
+          So I wanted to take this opportunity to share some of these ideas—for those who haven't had a chance to watch Jorge's presentation yet—and also try to answer any questions you might have from watching it.
           <br><br>
-          Finally, I'm very eager to learn more about Teamtailor's code design philosophy, how it differs from 37signals', and what we can learn from each other in an effort to make the code we write together at Teamtailor even better.
+          Finally, I'm very eager to learn more about Teamtailor's code design philosophy, how it differs from 37signals, and what we can learn from each other in an to make the code we write together at Teamtailor even better.
         </p>
       </div>
 
@@ -159,11 +159,11 @@
         </p>
 
         <p class="speaker-notes">
-          Domain driven design and ShapeUp share the same technique of starting with the epicenter and working our way out.
+          So, domain driven design and ShapeUp share the same technique—starting with the epicenter and working our way out.
           <br><br>
-          When organizing our code we place our domain model in the center and build outwards.
+          When organizing our code, we place the domain model in the center and build outwards.
           <br><br>
-          From there roles and traits can be extended outward as concern modules, utilizing object composition when necessary.
+          And from there, roles and traits can be extended as concern modules, using object composition when necessary.
         </p>
       </div>
 
@@ -212,13 +212,13 @@ end</code></pre>
         <p class="speaker-notes">
           So this is the Card model from Fizzy.
           <br><br>
-          The Card is a central entity so it has a lot going on but thanks to Concerns we can still grasp it easily enough.
+          The Card is a central entity, so it has a lot going on—but thanks to Concerns we can still grasp it pretty easily.
           <br><br>
-          Each Concern defines a specific trait. Golden means it can be gilded, Stallable tracks activity spikes and so on.
+          Each Concern defines a specific trait. Golden means it can be gilded, Stallable tracks if a card has been stalled, and so on.
           <br><br>
-          The model itself stays focused on what defines the core: associations, scopes, and a few key methods.
+          And the model itself stays focused on what defines the core: associations, scopes, and a few key methods.
           <br><br>
-          You can open this file and immediately understand what a Card is and does.
+          So you can open this file and immediately understand what a Card is and does.
         </p>
       </div>
 
@@ -264,13 +264,13 @@ end</code></pre>
 
 
         <p class="speaker-notes">
-          Here's what one of those concerns looks like inside.
+          And here's what one of those concerns looks like inside.
           <br><br>
           Everything about gilding lives in this one file—the association, the scope, the methods.
           <br><br>
-          If I need to change how gilding works, I go to one place. Jorge talks about this a lot: things that belong together should live together.
+          So if I need to change how gilding works, I go to one place. Jorge talks about this a lot: things that belong together should live together.
           <br><br>
-          It's also nice how readable the methods are—golden?, gild, ungild. That's the ubiquitous language pillar in action.
+          And it's nice how readable the methods are—golden?, gild, ungild. That's the ubiquitous language pillar in action.
         </p>
       </div>
 
@@ -411,16 +411,15 @@ end</code></pre>
         </div>
 
         <p class="speaker-notes">
-          Jorge explains how wrapping a single line in a service object adds a lot of distracting boilerplate.
-          I'd like to think that most people would agree with this simple example so I wanted to make it more interesting by including the implementation for comparison.
+          So Jorge explains how wrapping a single line in a service object adds a lot of distracting boilerplate.
           <br><br>
-          On the left we see a lot of feature envy and unnecessary ceremony to initialize the service object. We add noise without value by explicitly referring
-          to the object as a service and call `call` on it.
+          I think most people would agree with this simple example, so I wanted to make it more interesting by including the implementation for comparison.
           <br><br>
-          On the right we see the method directly on the model. There's no feature envy here which allows us to focus on intent rather than syntax.
+          On the left, we see a lot of feature envy and unnecessary ceremony to initialize the service object. We add noise without value by explicitly calling `call` on a "service."
           <br><br>
-          There are still good examples on when a Controller might want to delegate orchestration to a service object.
-          In this example we use a form object to coordinate multiple things to keep the controller slim and focused on the bigger picture.
+          But on the right, the method lives directly on the model. There's no feature envy, which lets us focus on intent rather than syntax.
+          <br><br>
+          Now, there are still good examples of when a Controller might want to delegate to a service object. In this example we use a form object to coordinate multiple things and keep the controller slim.
         </p>
       </div>
 
@@ -458,7 +457,7 @@ end</code></pre>
         <p class="speaker-notes">
           This is another example of something Jorge mentions—they don't use the word "service" and they avoid method names like `call` or `execute`.
           <br><br>
-          When we compare `CardGildingService.call(card)` versus `card.gild` it is easy to see how the second one reads like English prose where as the first one is focused on the implementation.
+          And when you compare `CardGildingService.call(card)` versus `card.gild`, it's easy to see how the second one reads like English prose—while the first one is all about implementation.
         </p>
       </div>
 
@@ -549,11 +548,11 @@ end</code></pre>
         </div>
 
         <p class="speaker-notes">
-          Controllers connect our domain models with the external world. In much the same way, jobs act as a thin layer of orchestration for our domain logic.
+          So controllers connect our domain models with the external world. And jobs work the same way—they're a thin layer of orchestration for our domain logic.
           <br><br>
           Jorge makes this point that controllers and jobs are already doing what service objects do. They orchestrate.
           <br><br>
-          The difference is they're built into Rails and most of the ceremony has been extracted away by the framework.
+          The difference is they're built into Rails, and most of the ceremony has been extracted away by the framework.
         </p>
       </div>
 
@@ -596,9 +595,9 @@ end</code></pre>
         </p>
 
         <p class="speaker-notes">
-          Concerns and object composition work great together.
+          So, concerns and object composition actually work great together.
           <br><br>
-          The concern gives you a natural API to work with where you don't have to know about the complexity that might or might not be abstracted by an underlying object.
+          The concern gives you a natural API to work with—you don't have to know about the complexity that might be hidden in an underlying object.
         </p>
       </div>
 
