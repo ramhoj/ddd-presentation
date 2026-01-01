@@ -1081,9 +1081,11 @@ body.notes-hidden.training-mode .speaker-notes {
   visibility: hidden;
 }
 
-/* Training mode on mobile - full screen notes for teleprompter use */
+/* Mobile: Always use full-screen notes (single mode) */
 @media (max-width: 768px) {
-  body.training-mode .speaker-notes {
+  /* On mobile, regular notes are full-screen */
+  body:not(.notes-hidden) .speaker-notes {
+    position: fixed;
     top: 0;
     left: 0;
     right: 0;
@@ -1103,6 +1105,10 @@ body.notes-hidden.training-mode .speaker-notes {
     align-items: center;
     justify-content: center;
     text-align: center;
+    opacity: 1;
+    visibility: visible;
+    z-index: 200;
+    margin: 0;
   }
 }
 
