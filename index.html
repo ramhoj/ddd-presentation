@@ -46,21 +46,33 @@
             <h2 class="slide-title">Nicklas Ramhöj Holtryd</h2>
             <p class="about-bio">New on the product team in Gothenburg</p>
             <p class="about-bio">Previously 3 years at <strong>37signals</strong> — <strong>Basecamp</strong> & <strong>HEY</strong></p>
-            <p class="about-bio">Sharing ideas from Jorge's <a href="https://www.youtube.com/watch?v=dvPXFnX60cg">Fizzy presentation</a></p>
+            <p class="about-bio">Sharing ideas from Jorge's <a href="https://www.youtube.com/watch?v=dvPXFnX60cg">Fizzy video</a></p>
           </div>
           <img src="profile-photo-cropped-3.jpeg" alt="Nicklas Ramhöj Holtryd" class="profile-photo">
         </div>
 
         <p class="speaker-notes">
-          Good day everyone, thank you very much for comming! So, I'm the new developer on the product team here in Gothenburg.
+          Hi there! I'm the new developer on the product team here in Gothenburg.
           <br><br>
           Before I joined Teamtailor about three weeks ago, I spent three years at 37signals working on Basecamp and HEY.
           <br><br>
-          As you probably know, they have a lot of strong preferences when it comes to code design, and some of you might have seen Jorge Manrubia talk about some of them in his Fizzy presentation recently.
+          I learned a lot from my time there and CJ suggested that I'd share some of code design ideas
+          that I picked up there with you here today.
           <br><br>
-          So I wanted to take this opportunity to share some of these ideas—for those who haven't had a chance to watch Jorge's presentation yet—and also try to answer any questions you might have from watching it.
+          There is of course a lot of information on this available and some of you migth even have
+          seen Jorge Manrubia video about some of them in his Fizzy presentation recently.
           <br><br>
-          Finally, I'm very eager to learn more about Teamtailor's code design philosophy, how it differs from 37signals', and what I can learn from you all.
+          I could spend hours talking code design so I've narrowed it down to 37signals' take on domain driven design.
+          Which is mostly what Jorge's video is about too. If you've seen it most of this presentation will be familiar to you
+          but I hope I can still contribute some value by answering questions that you might have after watching it.
+          <br><br>
+          <br><br>
+          The ideas I'm sharing here was dogma at 37signals and I've leanred to appricate a lot of them, that said
+          I understand that they only represent one company's way of writing Rails applications and
+          I'm very eager to learn more about Teamtailor's code design philosophy, how it differs from
+          37signals', and what I can learn from you all!
+          <br><br>
+          Enought intro, let's get going.
         </p>
       </div>
 
@@ -99,7 +111,7 @@
         </div>
 
         <p class="speaker-notes">
-          Domain-Driven Design. So, Jorge mentions his in his video.
+          Domain-Driven Design. Let's do a very quick recap of what it's about.
           <br><br>
           DDD comes down to three core ideas: rich domain models, ubiquitous language, and a domain centric design.
           <br><br>
@@ -212,13 +224,11 @@ end</code></pre>
         <p class="speaker-notes">
           So this is the Card model from Fizzy.
           <br><br>
-          The Card is a central entity, so it has a lot going on—but thanks to Concerns we can still grasp it pretty easily.
+          The Card is a central entity, so it has a lot going on—but thanks to Concerns makes it much easier for me to digest it.
           <br><br>
           Each Concern defines a specific trait. Golden means it can be gilded, Stallable tracks if a card has been stalled, and so on.
           <br><br>
           And the model itself stays focused on what defines the core: associations, scopes, and a few key methods.
-          <br><br>
-          So you can open this file and immediately understand what a Card is and does.
         </p>
       </div>
 
@@ -269,8 +279,6 @@ end</code></pre>
           Everything about gilding lives in this one file—the association, the scope, the methods.
           <br><br>
           So if I need to change how gilding works, I go to one place. Jorge talks about this a lot: things that belong together should live together.
-          <br><br>
-          And it's nice how readable the methods are—golden?, gild, ungild. That's the ubiquitous language pillar in action.
         </p>
       </div>
 
@@ -411,15 +419,19 @@ end</code></pre>
         </div>
 
         <p class="speaker-notes">
-          So Jorge explains how wrapping a single line in a service object adds a lot of distracting boilerplate.
+          So Jorge explains how wrapping a single line in a service object cab add distracting boilerplate code.
           <br><br>
-          I think most people would agree with this simple example, so I wanted to make it more interesting by including the implementation for comparison.
+          I think most people would agree with this simple example,
+          so I wanted to make it more interesting by including the implementation for comparison.
           <br><br>
-          On the left, we see a lot of feature envy and unnecessary ceremony to initialize the service object. We add noise without value by explicitly calling `call` on a "service."
+          On the left, we see a lot of feature envy and unnecessary ceremony to initialize the service object.
+          We add noise without value by explicitly calling `call` on a "service."
           <br><br>
-          But on the right, the method lives directly on the model. There's no feature envy, which lets us focus on intent rather than syntax.
+          On the right, the method lives directly on the model.
+          There's no feature envy, which lets us focus on intent rather than syntax.
           <br><br>
-          Now, there are still good examples of when a Controller might want to delegate to a service object. In this example we use a form object to coordinate multiple things and keep the controller slim.
+          Now, there are still good examples of when a Controller might want to delegate to a service object.
+          In this example we use a form object to coordinate multiple things and keep the controller slim.
         </p>
       </div>
 
@@ -457,7 +469,9 @@ end</code></pre>
         <p class="speaker-notes">
           This is another example of something Jorge mentions—they don't use the word "service" and they avoid method names like `call` or `execute`.
           <br><br>
-          And when you compare `CardGildingService.call(card)` versus `card.gild`, it's easy to see how the second one reads like English prose—while the first one is all about implementation.
+          And when you compare `CardGildingService.call(card)` versus `card.gild`,
+          it's easy to see how the second one reads like more like English prose.
+          To me, the second one feels more written for a computer than for a human's consumption.
         </p>
       </div>
 
@@ -548,7 +562,8 @@ end</code></pre>
         </div>
 
         <p class="speaker-notes">
-          So controllers connect our domain models with the external world. And jobs work the same way—they're a thin layer of orchestration for our domain logic.
+          So controllers connect our domain models with the external world.
+          And jobs work the same way—they're a thin layer of orchestration for our domain logic.
           <br><br>
           Jorge makes this point that controllers and jobs are already doing what service objects do. They orchestrate.
           <br><br>
@@ -598,6 +613,10 @@ end</code></pre>
           So, concerns and object composition actually work great together.
           <br><br>
           The concern gives you a natural API to work with—you don't have to know about the complexity that might be hidden in an underlying object.
+          <br><br>
+          This works for Controllers as well.
+          A Controller can have concerns such as CardScoped, which handles looking up the card.
+          And it can use object composition to delegate more complex orchestration when necessary.
         </p>
       </div>
 
@@ -623,8 +642,8 @@ end</code></pre>
           <li>Use concerns to organize traits that belong together</li>
           <li>Prefer semantic names over generic verbs like <code>call</code></li>
           <li>Controllers and jobs orchestrate; they don't hold business logic</li>
-          <li>Minimize boilerplate to allow intent to be more directly accessible</li>
-          <li>Prioritize what's coherent for humans over theoretical purity</li>
+          <li>Minimize boilerplate and syntax to allow intent to be more directly accessible</li>
+          <li>Prioritize what's coherent and beautiful for humans over theoretical purity</li>
         </ul>
       </div>
 
