@@ -583,9 +583,14 @@ end</code></pre>
       <div class="slide-inner">
         <h2 class="slide-title">Concerns + object composition = ❤️</h2>
 
-        <div class="code-container">
-          <span class="code-filename">app/models/card/stallable.rb</span>
-          <pre class="code-block"><code class="language-ruby">module Card::Stallable
+        <div class="code-tabs">
+          <div class="code-tabs-nav">
+            <button class="code-tab active" data-tab="model-concern">app/models/card/stallable.rb</button>
+            <button class="code-tab" data-tab="controller-concern">app/controllers/cards/goldnesses_controller.rb</button>
+          </div>
+
+          <div class="code-tab-content active" id="tab-model-concern">
+            <pre class="code-block"><code class="language-ruby">module Card::Stallable
   extend ActiveSupport::Concern
 
   included do
@@ -601,12 +606,28 @@ end</code></pre>
     Card::ActivitySpike::Detector.new(self).detect
   end
 end</code></pre>
-        </div>
+            <p class="slide-text">
+              The concern organizes the API. The <code>Detector</code> object handles the details.
+            </p>
+          </div>
 
-        <p class="slide-text">
-          The concern organizes the API. The <code>Detector</code> object takes care of detection details.<br>
-          Concerns don't replace object-oriented design—they complement it.
-        </p>
+          <div class="code-tab-content" id="tab-controller-concern">
+            <pre class="code-block"><code class="language-ruby">class Cards::GoldnessesController < ApplicationController
+  include CardScoped
+
+  def create
+    @card.gild
+  end
+
+  def destroy
+    @card.ungild
+  end
+end</code></pre>
+            <p class="slide-text">
+              <code>CardScoped</code> handles lookup. The controller calls rich domain methods.
+            </p>
+          </div>
+        </div>
 
         <p class="speaker-notes">
           So, concerns and object composition actually work great together.
