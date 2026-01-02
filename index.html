@@ -587,6 +587,7 @@ end</code></pre>
           <div class="code-tabs-nav">
             <button class="code-tab active" data-tab="model-concern">app/models/card/stallable.rb</button>
             <button class="code-tab" data-tab="controller-concern">app/controllers/cards/goldnesses_controller.rb</button>
+            <button class="code-tab" data-tab="controller-object-composition">app/controllers/sessions_controller.rb</button>
           </div>
 
           <div class="code-tab-content active" id="tab-model-concern">
@@ -625,6 +626,34 @@ end</code></pre>
 end</code></pre>
             <p class="slide-text">
               <code>CardScoped</code> handles lookup. The controller calls rich domain methods.
+            </p>
+          </div>
+
+          <div class="code-tab-content" id="tab-controller-object-composition">
+            <pre class="code-block"><code class="language-ruby">class SessionsController < ApplicationController
+  disallow_account_scope
+
+  def create
+    if identity = Identity.find_by_email_address(email_address)
+      redirect_to_session_magic_link identity.send_magic_link
+    else
+      signup = Signup.new(email_address: email_address)
+      if signup.valid?(:identity_creation)
+        magic_link = signup.create_identity if Account.accepting_signups?
+        redirect_to_session_magic_link magic_link
+      else
+        head :unprocessable_entity
+      end
+    end
+  end
+
+  private
+    def email_address
+      params.expect(:email_address)
+    end
+end</code></pre>
+            <p class="slide-text">
+              The <code>Signup</code> form object handles complex orchestration.
             </p>
           </div>
         </div>
