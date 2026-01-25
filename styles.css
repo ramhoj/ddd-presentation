@@ -926,9 +926,18 @@ body:has(.slide:target) .slide:not(:target) {
     right: var(--space-md);
   }
 
-  /* Hide nav when training mode is active (notes are fullscreen) */
+  /* Position nav above fullscreen notes in training mode */
   body.training-mode .slide-nav {
-    display: none;
+    bottom: var(--space-lg);
+    z-index: 250;
+    background: rgba(0, 0, 0, 0.5);
+    padding: var(--space-sm);
+    border-radius: 8px;
+  }
+
+  body.training-mode .slide-nav .nav-link {
+    opacity: 0.8;
+    background: var(--tt-grey-64);
   }
 }
 
@@ -986,9 +995,13 @@ body:has(.slide:target) .slide:not(:target) {
     font-size: 0.8rem;
   }
 
-  /* Hide counter when training mode is active (notes are fullscreen) */
+  /* Position counter above fullscreen notes in training mode */
   body.training-mode .slide-counter {
-    display: none;
+    bottom: var(--space-lg);
+    z-index: 250;
+    background: rgba(0, 0, 0, 0.5);
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: 6px;
   }
 }
 
