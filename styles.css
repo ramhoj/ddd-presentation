@@ -717,6 +717,13 @@ body:has(.slide:target) .slide:not(:target) {
   margin: 0;
 }
 
+/* Text captions inside tab content - visually separated from code */
+.code-tab-content > .slide-text {
+  margin: 0;
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--tt-grey-78);
+}
+
 /* When tab content contains a comparison, add border to inner code blocks */
 .code-tab-content .comparison .code-block {
   border: 1px solid var(--tt-grey-78);

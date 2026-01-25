@@ -270,6 +270,9 @@ end</code></pre>
     goldness&.destroy
   end
 end</code></pre>
+            <p class="slide-text">
+              Things that belong together, live together—including tests.
+            </p>
           </div>
 
           <div class="code-tab-content" id="tab-concern-test">
@@ -286,13 +289,11 @@ class Card::GoldenTest < ActiveSupport::TestCase
     assert_changes -> { card.golden? } { card.ungild }
   end
 end</code></pre>
+            <p class="slide-text">
+              No 2,000-line <code>card_test.rb</code>, just focused specs that mirror the concern structure.
+            </p>
           </div>
         </div>
-
-        <p class="slide-text" style="margin-top: 1rem;">
-          Things that belong together, live together—including tests.<br>
-          No 2,000-line <code>card_test.rb</code>, just focused specs that mirror the concern structure.
-        </p>
 
         <p class="speaker-notes">
           And here's what one of those concerns looks like inside.
@@ -687,10 +688,10 @@ end</code></pre>
       Card::ActivitySpike::DetectionJob.perform_later(self)
     end
 end</code></pre>
-      </div>
-      <p class="slide-text">
-        The concern organizes the API. The <code>Detector</code> object handles the details.
-      </p>
+            <p class="slide-text">
+              The concern organizes the API. The <code>Detector</code> object handles the details.
+            </p>
+          </div>
 
           <div class="code-tab-content" id="tab-controller-concern">
             <pre class="code-block"><code class="language-ruby">class Cards::GoldnessesController < ApplicationController
@@ -704,6 +705,9 @@ end</code></pre>
     @card.ungild
   end
 end</code></pre>
+            <p class="slide-text">
+              <code>CardScoped</code> handles lookup. The controller calls rich domain methods.
+            </p>
           </div>
 
           <div class="code-tab-content" id="tab-controller-object-composition">
@@ -733,10 +737,6 @@ end</code></pre>
               The <code>Signup</code> form object handles complex orchestration.
             </p>
           </div>
-
-          <p class="slide-text">
-            <code>CardScoped</code> handles lookup. The controller calls rich domain methods.
-          </p>
         </div>
 
         <p class="speaker-notes">
@@ -818,6 +818,14 @@ end</code></pre>
             <span class="resource-text">
               <strong>Fizzy Source Code</strong>
               <span class="resource-url">github.com/basecamp/fizzy</span>
+            </span>
+          </a>
+          
+          <a href="https://www.bokus.com/bok/9780321125217/domain-driven-design/?utm_source=google&utm_medium=cpc&utm_campaign=Performance%20Max%20%7C%20Studentlitteratur%20Int&gad_source=1&gad_campaignid=20010627963&gbraid=0AAAAADu4EMtOeGjZEcE3HIJVnzlzywVJT&gclid=Cj0KCQiAm9fLBhCQARIsAJoNOct2_7NZRb32BlKKpUq3ucWcsgwKcCCTARSUolehrYyttZYIjYWcR1AaAosCEALw_wcB" class="resource-link" target="_blank">
+            <span class="resource-icon">📘</span>
+            <span class="resource-text">
+              <strong>Eric Evans' Domain Driven Design book</strong>
+              <span class="resource-url">bokus.com/bok/9780321125217</span>
             </span>
           </a>
 
