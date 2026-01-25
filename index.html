@@ -27,7 +27,7 @@
     <section class="slide slide--gradient" id="title">
       <div class="slide-inner">
         <h1 class="slide-title slide-title--large">Domain Driven Design<br>in practice</h1>
-        <p class="slide-subtitle">Lessons from 37signals on writing maintainable code that is easy to reason about and beautiful to read.</p>
+        <p class="slide-subtitle">Lessons from 37signals on writing code that's clear, maintainable, and a pleasure to read.</p>
       </div>
 
       <nav class="slide-nav">
@@ -46,7 +46,7 @@
             <h2 class="slide-title">Nicklas Ramhöj Holtryd</h2>
             <p class="about-bio">New on the product team in Gothenburg</p>
             <p class="about-bio">Previously 3 years at <strong>37signals</strong> — <strong>Basecamp</strong> & <strong>HEY</strong></p>
-            <p class="about-bio">Sharing ideas from Jorge's <a href="https://www.youtube.com/watch?v=dvPXFnX60cg">Fizzy video</a></p>
+            <p class="about-bio">Sharing DDD ideas from Jorge's <a href="https://www.youtube.com/watch?v=dvPXFnX60cg">Fizzy tour</a></p>
           </div>
           <img src="profile-photo-cropped-3.jpeg" alt="Nicklas Ramhöj Holtryd" class="profile-photo">
         </div>
@@ -105,7 +105,7 @@
           <div class="ddd-principle">
             <span class="ddd-principle-icon">🎯</span>
             <h3>Domain First</h3>
-            <p>Everything else—controllers, jobs, APIs—orchestrates the domain. The domain is the core.</p>
+            <p>Controllers and jobs are enough to orchestrate the domain. The domain is the core.</p>
           </div>
         </div>
 
@@ -157,7 +157,6 @@
             <span class="epicenter-label epicenter-label--bottom">Jobs</span>
             <div class="epicenter-ring epicenter-ring--middle">
               <span class="epicenter-label epicenter-label--top">Golden</span>
-              <span class="epicenter-label epicenter-label--bottom">Stallable</span>
               <div class="epicenter-ring epicenter-ring--center">
                 <span class="epicenter-core">Card</span>
               </div>
@@ -166,7 +165,7 @@
         </div>
 
         <p class="slide-text" style="margin-top: 2rem;">
-          Start with the domain model at the center. Build outward with concerns and orchestration layers.
+          Start with the domain model at the center. Build outward with concerns and thin orchestration layers.
         </p>
 
         <p class="speaker-notes">
@@ -209,8 +208,8 @@
 
   def move_to(new_board)
     transaction do
-      card.update! board: new_board
-      card.events.update_all board_id: new_board.id
+      update! board: new_board
+      events.update_all board_id: new_board.id
     end
   end
 end</code></pre>
@@ -256,7 +255,7 @@ end</code></pre>
 
   included do
     has_one :goldness, dependent: :destroy
-    scope :golden, -> { joins(:goldness) }
+    scope :golden, -> { joins :goldness }
   end
 
   def golden?
@@ -441,7 +440,7 @@ end</code></pre>
               </div>
             </div>
             <p class="slide-text" style="margin-top: 1rem; font-size: 1rem;">
-              When orchestration grows complex, extract it to a form object. It stays in the domain, supports validation, and uses semantic naming.
+              Object composition can be the right choice when we want to compose multiple domain objects to perform a single operation.
             </p>
           </div>
         </div>
@@ -559,12 +558,6 @@ end</code></pre>
           <li><strong>DDD is about a coherent domain</strong> — not siloed procedures that pull data out, operate on it, and push it back in</li>
         </ul>
 
-        <p class="slide-text" style="margin-top: 2rem;">
-          When you send <code>card.gild</code> instead of <code>GildingService.call(card)</code>,<br>
-          the object receives a message and decides how to respond.<br>
-          <em>That's</em> object-oriented design.
-        </p>
-
         <p class="speaker-notes">
           Jorge's point is that Rails already gives us the service objects we need.
           Controllers orchestrate HTTP requests, jobs orchestrate background work.
@@ -597,20 +590,21 @@ end</code></pre>
 
         <div class="code-tabs">
           <div class="code-tabs-nav">
-            <button class="code-tab active" data-tab="controller">app/controllers/cards/closures_controller.rb</button>
+            <button class="code-tab active" data-tab="controller">app/controllers/cards/goldnesses_controller.rb</button>
             <button class="code-tab" data-tab="job">app/jobs/card/activity_spike/detection_job.rb</button>
+            <button class="code-tab" data-tab="model">app/models/card/stallable.rb</button>
           </div>
 
           <div class="code-tab-content active" id="tab-controller">
-            <pre class="code-block"><code class="language-ruby">class Cards::ClosuresController < ApplicationController
+            <pre class="code-block"><code class="language-ruby">class Cards::GoldnessesController < ApplicationController
   include CardScoped
 
   def create
-    @card.close
+    @card.gild
   end
 
   def destroy
-    @card.reopen
+    @card.ungild
   end
 end</code></pre>
           </div>
@@ -622,8 +616,27 @@ end</code></pre>
   end
 end</code></pre>
           </div>
+
+          <div class="code-tab-content" id="tab-model">
+            <pre class="code-block"><code class="language-ruby">module Card::Stallable
+  extend ActiveSupport::Concern
+
+  included do
+    after_update_commit :detect_activity_spikes_later
+  end
+
+  def detect_activity_spikes
+    Card::ActivitySpike::Detector.new(self).detect
+  end
+
+  private
+    def detect_activity_spikes_later
+      Card::ActivitySpike::DetectionJob.perform_later(self)
+    end
+end</code></pre>
+          </div>
           <p class="slide-text" style="margin-top: 1rem;">
-            These <em>are</em> the service objects in Eric Evans' original sense—thin layers that orchestrate domain objects.
+            These are service objects as Eric Evans intended—thin layers with one job: orchestrate. They succeed by knowing less, not more.
           </p>
         </div>
 
@@ -662,17 +675,17 @@ end</code></pre>
   extend ActiveSupport::Concern
 
   included do
-    has_one :activity_spike, class_name: "Card::ActivitySpike"
-    after_update_commit :detect_activity_spikes
-  end
-
-  def stalled?
-    open? && last_activity_spike_at < 14.days.ago
+    after_update_commit :detect_activity_spikes_later
   end
 
   def detect_activity_spikes
     Card::ActivitySpike::Detector.new(self).detect
   end
+
+  private
+    def detect_activity_spikes_later
+      Card::ActivitySpike::DetectionJob.perform_later(self)
+    end
 end</code></pre>
       </div>
       <p class="slide-text">
@@ -691,9 +704,6 @@ end</code></pre>
     @card.ungild
   end
 end</code></pre>
-            <p class="slide-text">
-              <code>CardScoped</code> handles lookup. The controller calls rich domain methods.
-            </p>
           </div>
 
           <div class="code-tab-content" id="tab-controller-object-composition">
@@ -723,6 +733,10 @@ end</code></pre>
               The <code>Signup</code> form object handles complex orchestration.
             </p>
           </div>
+
+          <p class="slide-text">
+            <code>CardScoped</code> handles lookup. The controller calls rich domain methods.
+          </p>
         </div>
 
         <p class="speaker-notes">
