@@ -279,14 +279,16 @@ end</code></pre>
             <pre class="code-block"><code class="language-ruby">require "test_helper"
 
 class Card::GoldenTest < ActiveSupport::TestCase
-  test "gild creates goldness" do
-    card = cards(:one)
-    assert_changes -> { card.golden? } { card.gild }
+  test "gild makes the card golden" do
+    assert_changes -> { cards(:ungilded).reload.golden? }, to: true do
+      { cards(:ungilded).gild }
+    end
   end
 
-  test "ungild removes goldness" do
-    card = cards(:golden_card)
-    assert_changes -> { card.golden? } { card.ungild }
+  test "ungild stops the card from being golden" do
+    assert_changes -> { cards(:gilded).reload.golden? }, to: false do
+      { cards(:gilded).ungild }
+    end
   end
 end</code></pre>
             <p class="slide-text">
@@ -505,6 +507,49 @@ end</code></pre>
 
       <nav class="slide-nav">
         <a href="#service-comparison" class="nav-link">←</a>
+        <a href="#organize-by-domain" class="nav-link">→</a>
+      </nav>
+    </section>
+
+    <!-- ================================================================
+         Organize by Domain
+         ================================================================ -->
+    <section class="slide slide--dark" id="organize-by-domain">
+      <div class="slide-inner">
+        <h2 class="slide-title">Organize by domain, not by pattern</h2>
+
+        <div class="naming-examples">
+          <div class="naming-row">
+            <code class="naming-bad">app/services/card_gilding.rb</code>
+            <span class="naming-arrow">→</span>
+            <code class="naming-good">app/models/card/golden.rb</code>
+          </div>
+          <div class="naming-row">
+            <code class="naming-bad">app/detectors/card_activity_spike.rb</code>
+            <span class="naming-arrow">→</span>
+            <code class="naming-good">app/models/card/activity_spike/detector.rb</code>
+          </div>
+        </div>
+
+        <p class="slide-text" style="margin-top: 2rem;">
+          Unless implementing specific orchestration roles such as Controllers and Jobs; avoid folders like <code>services/</code>, <code>processors/</code>, <code>resolvers/</code> etc that group by implementation.<br>
+          They explode your domain objects, making them harder to reason about.<br><br>
+          Organize by domain first. Use suffixes to denote roles when necessery.
+        </p>
+
+        <p class="speaker-notes">
+          This follows naturally from what we just talked about with semantic naming.
+          <br><br>
+          When you create folders by pattern—services, processors, resolvers—you're grouping code by what it does technically, not by what it means to the business.
+          <br><br>
+          Instead, group by domain concept first. Everything about cards lives under Card::. Everything about reports lives under Report::. If you need a detector, it's Card::ActivitySpike::Detector. If you need a resolver, it's Report::QuestionResolver.
+          <br><br>
+          The suffix tells you the role. The namespace tells you the domain. When you're debugging reports, you look in one place: app/models/report/. Not across resolvers, filters, and services.
+        </p>
+      </div>
+
+      <nav class="slide-nav">
+        <a href="#semantic-naming" class="nav-link">←</a>
         <a href="#chapter-orchestration" class="nav-link">→</a>
       </nav>
     </section>
@@ -524,7 +569,7 @@ end</code></pre>
       </div>
 
       <nav class="slide-nav">
-        <a href="#semantic-naming" class="nav-link">←</a>
+        <a href="#organize-by-domain" class="nav-link">←</a>
         <a href="#quote-service-objects" class="nav-link">→</a>
       </nav>
     </section>
