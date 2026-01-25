@@ -920,17 +920,13 @@ body:has(.slide:target) .slide:not(:target) {
   display: none;
 }
 
-/* Mobile: Position nav above the fixed notes panel */
+/* Mobile: Adjust nav positioning */
 @media (max-width: 768px) {
   .slide-nav {
-    bottom: calc(35vh + var(--space-md));
     right: var(--space-md);
   }
 
-  body.notes-hidden .slide-nav {
-    bottom: var(--space-md);
-  }
-
+  /* Hide nav when training mode is active (notes are fullscreen) */
   body.training-mode .slide-nav {
     display: none;
   }
@@ -983,18 +979,14 @@ body:has(.slide:target) .slide:not(:target) {
   transition: bottom 0.3s ease;
 }
 
-/* Mobile: Position counter above the fixed notes panel */
+/* Mobile: Adjust counter positioning */
 @media (max-width: 768px) {
   .slide-counter {
-    bottom: calc(35vh + var(--space-md));
     left: var(--space-md);
     font-size: 0.8rem;
   }
 
-  body.notes-hidden .slide-counter {
-    bottom: var(--space-md);
-  }
-
+  /* Hide counter when training mode is active (notes are fullscreen) */
   body.training-mode .slide-counter {
     display: none;
   }
@@ -1056,41 +1048,14 @@ body:has(.slide:target) .slide:not(:target) {
    SPEAKER NOTES
    ============================================================================= */
 
+/* Hidden by default - only visible in training mode */
 .speaker-notes {
-  max-width: 900px;
-  width: 100%;
-  font-size: 0.75rem;
-  line-height: 1.5;
-  color: var(--tt-grey-43);
-  text-align: left;
-  padding: var(--space-md);
-  background: var(--tt-grey-84);
-  border: 1px solid var(--tt-grey-78);
-  border-radius: 8px;
-  opacity: 0.8;
-  transition: opacity 0.3s ease, visibility 0.3s ease, max-height 0.3s ease;
-  margin-top: var(--space-lg);
-  flex-shrink: 0;
+  display: none;
 }
 
-.speaker-notes:hover {
-  opacity: 1;
-  color: var(--tt-grey-13);
-}
-
-/* Hidden state for speaker notes */
-body.notes-hidden .speaker-notes {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  max-height: 0;
-  padding: 0;
-  margin: 0;
-  overflow: hidden;
-}
-
-/* Training mode - large notes overlay (T key) */
+/* Training mode - notes overlay (T key) */
 body.training-mode .speaker-notes {
+  display: block;
   position: fixed;
   bottom: var(--space-lg);
   left: 50%;
@@ -1105,17 +1070,10 @@ body.training-mode .speaker-notes {
   background: var(--tt-grey-84);
   border: 1px solid var(--tt-grey-64);
   border-radius: 12px;
-  opacity: 1;
   color: var(--tt-grey-13);
+  text-align: left;
   z-index: 200;
   box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
-  margin: 0;
-}
-
-/* Hide training mode notes when notes-hidden is also active */
-body.notes-hidden.training-mode .speaker-notes {
-  opacity: 0;
-  visibility: hidden;
 }
 
 /* =============================================================================
@@ -1123,38 +1081,6 @@ body.notes-hidden.training-mode .speaker-notes {
    ============================================================================= */
 
 @media (max-width: 768px) {
-  /* Mobile: Position notes at bottom of viewport, not in flow */
-  .speaker-notes {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    max-width: none;
-    max-height: 35vh;
-    overflow-y: auto;
-    margin: 0;
-    border-radius: 12px 12px 0 0;
-    border-bottom: none;
-    font-size: 0.85rem;
-    line-height: 1.6;
-    padding: var(--space-md) var(--space-lg);
-    padding-bottom: calc(var(--space-lg) + env(safe-area-inset-bottom, 0));
-    z-index: 100;
-    background: var(--tt-grey-84);
-    opacity: 1;
-    color: var(--tt-grey-31);
-  }
-
-  .speaker-notes:hover {
-    color: var(--tt-grey-13);
-  }
-
-  /* Adjust slide padding to make room for fixed notes */
-  body:not(.notes-hidden) .slide {
-    padding-bottom: calc(35vh + var(--space-md));
-  }
-
   /* Training mode on mobile - full screen notes for teleprompter use */
   body.training-mode .speaker-notes {
     top: 0;
@@ -1177,11 +1103,6 @@ body.notes-hidden.training-mode .speaker-notes {
     overflow-y: auto;
     text-align: center;
   }
-
-  /* In training mode, slide doesn't need extra padding */
-  body.training-mode .slide {
-    padding-bottom: var(--space-lg);
-  }
 }
 
 /* =============================================================================
@@ -1193,16 +1114,16 @@ body.notes-hidden.training-mode .speaker-notes {
   bottom: var(--space-md);
   left: 50%;
   transform: translateX(-50%);
-  background: transparent;
-  border: 1px solid var(--tt-grey-78);
+  background: var(--tt-grey-84);
+  border: 1px dashed var(--tt-grey-78);
   color: var(--tt-grey-64);
   font-size: 0.65rem;
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
   cursor: pointer;
-  opacity: 0.15;
-  transition: opacity 0.3s ease, background 0.2s ease, bottom 0.3s ease;
-  z-index: 150;
+  opacity: 0.2;
+  transition: opacity 0.3s ease, background 0.2s ease;
+  z-index: 250;
   font-family: var(--font-family);
   letter-spacing: 0.03em;
   /* Hidden by default - shown on touch devices via media query */
@@ -1218,7 +1139,7 @@ body.notes-hidden.training-mode .speaker-notes {
 
 .notes-toggle:hover {
   opacity: 0.6;
-  background: var(--tt-grey-84);
+  background: var(--tt-grey-78);
   color: var(--tt-grey-43);
 }
 
@@ -1226,27 +1147,23 @@ body.notes-hidden.training-mode .speaker-notes {
   transform: translateX(-50%) scale(0.95);
 }
 
-body.notes-hidden .notes-toggle {
-  border-style: dashed;
+/* When training mode is active, show toggle at top */
+body.training-mode .notes-toggle {
+  top: var(--space-md);
+  bottom: auto;
+  opacity: 0.6;
+  border-style: solid;
 }
 
-/* Mobile: Position toggle above the fixed notes panel */
+/* Mobile: Style adjustments for toggle */
 @media (max-width: 768px) {
   .notes-toggle {
-    bottom: calc(35vh + var(--space-sm));
     opacity: 0.4;
-    background: var(--tt-grey-84);
     padding: 0.35rem 0.75rem;
     font-size: 0.7rem;
   }
 
-  body.notes-hidden .notes-toggle {
-    bottom: var(--space-md);
-  }
-
   body.training-mode .notes-toggle {
-    top: var(--space-md);
-    bottom: auto;
     background: rgba(0, 0, 0, 0.5);
     color: var(--tt-grey-31);
     opacity: 0.7;

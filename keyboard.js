@@ -15,8 +15,6 @@ document.addEventListener('keydown', (e) => {
   } else if (e.key === '0') {
     goToSlide(10)
   } else if (e.key === 'n' || e.key === 'N') {
-    toggleNotes()
-  } else if (e.key === 't' || e.key === 'T') {
     toggleTrainingMode()
   }
 })
@@ -46,17 +44,8 @@ function getCurrentSlideIndex(slides) {
   return index === -1 ? 0 : index
 }
 
-// Toggle speaker notes visibility
-function toggleNotes() {
-  document.body.classList.toggle('notes-hidden')
-}
-
-// Toggle training mode (large notes overlay)
+// Toggle training mode (notes overlay)
 function toggleTrainingMode() {
-  // If notes are hidden, show them first
-  if (document.body.classList.contains('notes-hidden')) {
-    document.body.classList.remove('notes-hidden')
-  }
   document.body.classList.toggle('training-mode')
 }
 
@@ -92,10 +81,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialize code tabs
   initCodeTabs()
 
-  // Initialize notes toggle button
+  // Initialize notes toggle button (triggers training mode)
   const notesToggle = document.getElementById('notes-toggle')
   if (notesToggle) {
-    notesToggle.addEventListener('click', toggleNotes)
+    notesToggle.addEventListener('click', toggleTrainingMode)
   }
 
   // Initialize slide counter, navigation, and notes toggle visibility
