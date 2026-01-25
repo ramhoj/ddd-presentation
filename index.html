@@ -513,6 +513,48 @@ end</code></pre>
 
       <nav class="slide-nav">
         <a href="#chapter-orchestration" class="nav-link">←</a>
+        <a href="#faux-o" class="nav-link">→</a>
+      </nav>
+    </section>
+
+    <!-- ================================================================
+         Faux-O: The app/services Anti-Pattern
+         ================================================================ -->
+    <section class="slide slide--dark" id="faux-o">
+      <div class="slide-inner">
+        <h2 class="slide-title">We don't need <code>app/services</code></h2>
+
+        <ul class="takeaways">
+          <li><strong>Rails already provides orchestration</strong> — controllers connect the domain to the web, jobs connect it to background processing</li>
+          <li><strong>Service folders are procedural code in disguise</strong> — Sandi Metz calls this "Faux-O": code that looks object-oriented but retreats into procedures</li>
+          <li><strong>DDD is about a coherent domain</strong> — not siloed procedures that pull data out, operate on it, and push it back in</li>
+        </ul>
+
+        <p class="slide-text" style="margin-top: 2rem;">
+          When you send <code>card.gild</code> instead of <code>GildingService.call(card)</code>,<br>
+          the object receives a message and decides how to respond.<br>
+          <em>That's</em> object-oriented design.
+        </p>
+
+        <p class="speaker-notes">
+          Jorge's point is that Rails already gives us the service objects we need.
+          Controllers orchestrate HTTP requests, jobs orchestrate background work.
+          They're thin layers that delegate to the domain—that's what a service should be.
+          <br><br>
+          When we add an app/services folder, we're often doing something different.
+          We're pulling logic out of domain objects and putting it in procedures.
+          Sandi Metz calls this "Faux-O"—it looks object-oriented because we have classes,
+          but we've lost the benefits of OO. Objects become data bags. Behavior lives elsewhere.
+          <br><br>
+          DDD is the antidote. It's about building a coherent domain where objects
+          encapsulate both data and behavior. When you say card.gild, you're sending a message.
+          The card knows how to gild itself. That's the essence of object-oriented design—
+          you don't pull data out and operate on it, you tell objects what to do and let them figure out how.
+        </p>
+      </div>
+
+      <nav class="slide-nav">
+        <a href="#quote-service-objects" class="nav-link">←</a>
         <a href="#code-controller" class="nav-link">→</a>
       </nav>
     </section>
@@ -552,11 +594,7 @@ end</code></pre>
 end</code></pre>
           </div>
           <p class="slide-text" style="margin-top: 1rem;">
-            Controllers connect our domain models with the external world.
-            In much the same way, jobs act as a thin layer of orchestration for our domain logic.
-          </p>
-          <p class="slide-text" style="margin-top: 1rem;">
-            These <em>are</em> our service objects, we just don't call them that.
+            These <em>are</em> the service objects in Eric Evans' original sense—thin layers that orchestrate domain objects.
           </p>
         </div>
 
@@ -571,7 +609,7 @@ end</code></pre>
       </div>
 
       <nav class="slide-nav">
-        <a href="#quote-service-objects" class="nav-link">←</a>
+        <a href="#faux-o" class="nav-link">←</a>
         <a href="#concerns-composition" class="nav-link">→</a>
       </nav>
     </section>
@@ -607,10 +645,10 @@ end</code></pre>
     Card::ActivitySpike::Detector.new(self).detect
   end
 end</code></pre>
-            <p class="slide-text">
-              The concern organizes the API. The <code>Detector</code> object handles the details.
-            </p>
-          </div>
+      </div>
+      <p class="slide-text">
+        The concern organizes the API. The <code>Detector</code> object handles the details.
+      </p>
 
           <div class="code-tab-content" id="tab-controller-concern">
             <pre class="code-block"><code class="language-ruby">class Cards::GoldnessesController < ApplicationController
@@ -692,7 +730,7 @@ end</code></pre>
           <li>Write code using clear, natural and ubiquitous language.</li>
           <li>Minimize boilerplate and syntax to allow intent to be more directly accessible.</li>
           <li>Controllers and jobs orchestrate; they don't hold business logic.</li>
-          <li>Non-Controller / Job services are Faux OO, abdicating OOP design principles.</li>
+          <li>Non-Controller / Job services are Faux OO, abdicating OO design principles.</li>
         </ul>
       </div>
 
