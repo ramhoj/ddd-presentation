@@ -244,9 +244,14 @@ end</code></pre>
       <div class="slide-inner">
         <h2 class="slide-title">Traits as concerns</h2>
 
-        <div class="code-container">
-          <span class="code-filename">app/models/card/golden.rb</span>
-          <pre class="code-block"><code class="language-ruby">module Card::Golden
+        <div class="code-tabs">
+          <div class="code-tabs-nav">
+            <button class="code-tab active" data-tab="concern-code">app/models/card/golden.rb</button>
+            <button class="code-tab" data-tab="concern-test">test/models/card/golden_test.rb</button>
+          </div>
+
+          <div class="code-tab-content active" id="tab-concern-code">
+            <pre class="code-block"><code class="language-ruby">module Card::Golden
   extend ActiveSupport::Concern
 
   included do
@@ -266,11 +271,29 @@ end</code></pre>
     goldness&.destroy
   end
 end</code></pre>
-          <p class="slide-text">
-            Things that belong together, live together. Easy to understand, easy to maintain, minimal distractions.
-          </p>
+          </div>
+
+          <div class="code-tab-content" id="tab-concern-test">
+            <pre class="code-block"><code class="language-ruby">require "test_helper"
+
+class Card::GoldenTest < ActiveSupport::TestCase
+  test "gild creates goldness" do
+    card = cards(:one)
+    assert_changes -> { card.golden? } { card.gild }
+  end
+
+  test "ungild removes goldness" do
+    card = cards(:golden_card)
+    assert_changes -> { card.golden? } { card.ungild }
+  end
+end</code></pre>
+          </div>
         </div>
 
+        <p class="slide-text" style="margin-top: 1rem;">
+          Things that belong together, live together—including tests.<br>
+          No 2,000-line <code>card_test.rb</code>, just focused specs that mirror the concern structure.
+        </p>
 
         <p class="speaker-notes">
           And here's what one of those concerns looks like inside.
@@ -278,6 +301,12 @@ end</code></pre>
           Everything about gilding lives in this one file—the association, the scope, the methods.
           <br><br>
           So if I need to change how gilding works, I go to one place. Jorge talks about this a lot: things that belong together should live together.
+          <br><br>
+          And notice the test file—it mirrors the concern path. Instead of one massive card_test.rb with thousands of lines,
+          you have focused test files for each concern. When you're working on gilding, you run the gilding tests.
+          When you change the concern, you know exactly which tests to update.
+          <br><br>
+          This is the same principle applied to tests: things that belong together, live together.
         </p>
       </div>
 
