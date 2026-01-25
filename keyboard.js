@@ -81,6 +81,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialize code tabs
   initCodeTabs()
 
+  // Initialize touch/swipe navigation for mobile
+  initTouchNavigation()
+
   // Initialize notes toggle button (triggers training mode)
   const notesToggle = document.getElementById('notes-toggle')
   if (notesToggle) {
@@ -97,6 +100,45 @@ document.addEventListener('DOMContentLoaded', () => {
     Prism.highlightAll()
   }
 })
+
+// Touch/swipe navigation for mobile
+function initTouchNavigation() {
+  let touchStartX = 0
+  let touchStartY = 0
+  let touchEndX = 0
+  let touchEndY = 0
+
+  const minSwipeDistance = 50 // Minimum distance for a swipe
+  const maxVerticalDistance = 100 // Max vertical movement to still count as horizontal swipe
+
+  document.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX
+    touchStartY = e.changedTouches[0].screenY
+  }, { passive: true })
+
+  document.addEventListener('touchend', (e) => {
+    touchEndX = e.changedTouches[0].screenX
+    touchEndY = e.changedTouches[0].screenY
+    handleSwipe()
+  }, { passive: true })
+
+  function handleSwipe() {
+    const deltaX = touchEndX - touchStartX
+    const deltaY = touchEndY - touchStartY
+
+    // Only handle horizontal swipes (ignore vertical scrolling)
+    if (Math.abs(deltaX) < minSwipeDistance) return
+    if (Math.abs(deltaY) > maxVerticalDistance) return
+
+    if (deltaX < 0) {
+      // Swipe left → go to next slide
+      navigate(1)
+    } else {
+      // Swipe right → go to previous slide
+      navigate(-1)
+    }
+  }
+}
 
 // Update slide counter display
 function updateSlideCounter() {
