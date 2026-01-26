@@ -226,10 +226,11 @@ end</code></pre>
           So this is the Card model from Fizzy.
           <br><br>
           The Card is a central entity, so it has a lot going on—but thanks to Concerns it's much easier to digest.
+          Here we can see how they act as a table of contents for the model.
           <br><br>
           Each Concern defines a specific trait. Golden means it can be gilded, Stallable tracks if a card has been stalled, and so on.
           <br><br>
-          And the model itself stays focused on what defines the core. That remains are things that without would make the model pointless.
+          And the model itself stays focused on what defines the core. What remains are things that without, would make the model pointless.
         </p>
       </div>
 
@@ -557,7 +558,7 @@ end</code></pre>
           <br><br>
           Instead, group by domain concept first. Everything about cards lives under Card::. Gilding logic goes in Card::Golden. Activity spike detection goes in Card::ActivitySpike::Detector.
           <br><br>
-          The namespace tells you the domain. The suffix tells you the role. When you're debugging cards, you look in one place: app/models/card/. Not scattered across services, detectors, and processors.
+          The namespace tells you the domain. The suffix tells you the role. What way, domain logic isn't scattered across different folders but stay together.
         </p>
       </div>
 
@@ -619,13 +620,13 @@ end</code></pre>
 
         <p class="speaker-notes">
           Jorge's explains that Rails already gives us the service objects we need.
-          Controllers orchestrate HTTP requests, jobs orchestrate background work.
+          Controllers orchestrate HTTP requests, Jobs orchestrate background work and so on.
           They're thin layers that delegate to the domain—that's what a service should be.
           <br><br>
           When we add an app/services folder, we're often doing something different.
           We're pulling logic out of domain objects and putting it in procedures.
           Sandi Metz calls this "Faux-O"—it looks object-oriented because we have classes,
-          but we've lost the benefits of OO. Objects become data bags. Behavior lives elsewhere.
+          but we've lost the benefits of Object Oriented Design. Objects become data bags and behavior becomes scattered.
           <br><br>
           DDD is the antidote. It's about building a coherent domain where objects
           encapsulate both data and behavior. When you say card.gild, you're sending a message.
