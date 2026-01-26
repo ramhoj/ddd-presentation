@@ -60,9 +60,9 @@
           that I picked up.
           <br><br>
           37signals design preferences aren't by any means secret and some of you might have
-          seen Jorge Manrubia's video about some of them in his Fizzy tour recently.
+          seen Jorge Manrubia's Fizzy tour video recently.
           <br><br>
-          I could spend hours talking about code design so I've narrowed it down to 37signals' take on domain driven design.
+          I could spend hours talking about code design so I've narrowed today's topic down to 37signals' take on domain driven design.
           This is mostly what Jorge's video is about. If you've seen it, most of this presentation will be familiar to you
           but I hope that I can still contribute some value by answering questions and provide different perspectives.
           <br><br>
@@ -473,8 +473,8 @@ end</code></pre>
           On the right, the method lives directly on the model.
           There's no feature envy, which lets us focus on intent rather than syntax.
           <br><br>
-          Now, there are still good examples of when a Controller might want to delegate to a service object.
-          In this example we use a form object to coordinate multiple things and keep the controller slim.
+          Now, there are still good examples of when a Controller might want to delegate work.
+          In this example we use what 37signals calls a form object to coordinate multiple models, keeping the controller slim.
         </p>
       </div>
 
@@ -514,7 +514,7 @@ end</code></pre>
           <br><br>
           And when you compare `CardGildingService.call(card)` versus `card.gild`,
           it's easy to see how the second one reads more like English prose.
-          To me, the first one feels more written for a computer than for a human's consumption.
+          To me, the first one feels more written for a computer than for human consumption.
         </p>
       </div>
 
@@ -578,7 +578,7 @@ end</code></pre>
       <div class="slide-inner">
         <p class="chapter-label">Chapter 3</p>
         <h2 class="slide-title slide-title--large">Orchestration</h2>
-        <p class="slide-subtitle">Controllers and jobs</p>
+        <p class="slide-subtitle">Controllers, Jobs, Mailers and Channels</p>
       </div>
 
       <nav class="slide-nav">
@@ -812,13 +812,14 @@ end</code></pre>
     <section class="slide slide--gradient" id="takeaways">
       <div class="slide-inner">
         <h2 class="slide-title">Takeaways</h2>
+        <p class="slide-subtitle" style="font-size: 1.25rem; margin-top: -2rem;">37signals' take on domain driven design</p>
 
         <ul class="takeaways">
           <li>Let the domain model take the center stage in your architecture.</li>
-          <li>Use concerns to organize traits that belong together.</li>
+          <li>Use concerns to organize your domain object traits.</li>
           <li>Write code using clear, natural and ubiquitous language.</li>
           <li>Minimize boilerplate and syntax to allow intent to be more directly accessible.</li>
-          <li>Controllers and jobs orchestrate; they don't hold business logic.</li>
+          <li>Controllers, Jobs, Mailers etc orchestrate; they don't hold business logic.</li>
           <li>app/services are Faux OO, abdicating from OO design principles.</li>
         </ul>
       </div>
