@@ -1190,12 +1190,13 @@ body:has(.slide:target) .slide:not(:target) {
 body.training-mode .speaker-notes {
   display: block;
   position: fixed;
-  bottom: var(--space-lg);
+  top: var(--space-md);
+  bottom: var(--space-md);
   left: 50%;
   transform: translateX(-50%);
   width: 90%;
   max-width: 1000px;
-  max-height: 40vh;
+  max-height: none;
   overflow-y: auto;
   font-size: 1.1rem;
   line-height: 1.6;
@@ -1206,7 +1207,7 @@ body.training-mode .speaker-notes {
   color: var(--tt-grey-13);
   text-align: left;
   z-index: 200;
-  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
 }
 
 /* =============================================================================
