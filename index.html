@@ -52,12 +52,6 @@
         </div>
 
         <p class="speaker-notes">
-          <small>
-            • New on product team, 3 years at 37signals<br>
-            • CJ suggested sharing code design ideas<br>
-            • Based on Jorge's Fizzy tour video<br>
-            • Focused on DDD—open to learning TT's approach
-          </small>
           Hi there! I'm Nicklas, a new developer on the product team in Gothenburg.
           <br><br>
           Before I joined Teamtailor, I spent three years at 37signals working on Basecamp and HEY.
@@ -69,8 +63,8 @@
           seen Jorge Manrubia's video about some of them in his Fizzy tour recently.
           <br><br>
           I could spend hours talking about code design so I've narrowed it down to 37signals' take on domain driven design.
-          This is mostly what Jorge's video is about too. If you've seen it, most of this presentation will be familiar to you
-          but I hope that I can still contribute some value by answering questions that you might have from watching it.
+          This is mostly what Jorge's video is about. If you've seen it, most of this presentation will be familiar to you
+          but I hope that I can still contribute some value by answering questions and provide different perspectives.
           <br><br>
           The ideas I'm sharing here were dogma at 37signals and I've learned to appreciate a lot of them. That said,
           I understand that they only represent one company's way of writing Rails applications and
@@ -111,16 +105,11 @@
           <div class="ddd-principle">
             <span class="ddd-principle-icon">🎯</span>
             <h3>Domain First</h3>
-            <p>Controllers and jobs are enough to orchestrate the domain. The domain is the core.</p>
+            <p>The domain model is the heart of the application. Everything else exists to serve it.</p>
           </div>
         </div>
 
         <p class="speaker-notes">
-          <small>
-            • Quick DDD recap<br>
-            • Three pillars: rich models, ubiquitous language, domain-first<br>
-            • Next: practical examples from 37signals
-          </small>
           Domain-Driven Design. Let's do a very quick recap of what it's about.
           <br><br>
           DDD comes down to three core ideas: rich domain models, ubiquitous language, and a domain centric design.
@@ -180,11 +169,6 @@
         </p>
 
         <p class="speaker-notes">
-          <small>
-            • Same as ShapeUp: start at epicenter<br>
-            • Domain model at center, build outward<br>
-            • Concerns for roles/traits, composition when needed
-          </small>
           So, domain driven design and ShapeUp share the same technique—starting with the epicenter and working our way out.
           <br><br>
           When organizing our code, we place the domain model in the center and build outwards.
@@ -239,18 +223,13 @@ end</code></pre>
         </p>
 
         <p class="speaker-notes">
-          <small>
-            • Card model from Fizzy—central entity<br>
-            • Concerns make it digestible (Golden, Stallable, etc.)<br>
-            • Core model stays focused: associations, scopes, key methods
-          </small>
           So this is the Card model from Fizzy.
           <br><br>
-          The Card is a central entity, so it has a lot going on—but thanks to Concerns it's much easier for me to digest.
+          The Card is a central entity, so it has a lot going on—but thanks to Concerns it's much easier to digest.
           <br><br>
           Each Concern defines a specific trait. Golden means it can be gilded, Stallable tracks if a card has been stalled, and so on.
           <br><br>
-          And the model itself stays focused on what defines the core: associations, scopes, and a few key methods.
+          And the model itself stays focused on what defines the core. That remains are things that without would make the model pointless.
         </p>
       </div>
 
@@ -330,22 +309,17 @@ end</code></pre>
         </div>
 
         <p class="speaker-notes">
-          <small>
-            • All gilding logic in one file<br>
-            • "Things that belong together, live together"<br>
-            • Tests mirror concern structure—no 2,000-line test files
-          </small>
           And here's what one of those concerns looks like inside.
           <br><br>
-          Everything about gilding lives in this one file—the association, the scope, the methods.
+          Everything about gilding lives in this one file—the association, the scope, the private and public API.
           <br><br>
           So if we need to change how gilding works, we have one place to go. Jorge talks about this a lot: things that belong together should live together.
+          <br><br>
+          It we where to put it all in the model, you'd have to scroll a lot to for example see the details of `auto_gild?`. Now they are close.
           <br><br>
           And notice the test file—it mirrors the concern path. Instead of one massive card_test.rb with thousands of lines,
           you have focused test files for each concern. When you're working on gilding, you run the gilding tests.
           When you change the concern, you know exactly which tests to update.
-          <br><br>
-          This is the same principle applied to tests: things that belong together, live together.
         </p>
       </div>
 
@@ -488,11 +462,6 @@ end</code></pre>
         </div>
 
         <p class="speaker-notes">
-          <small>
-            • Service wrappers add boilerplate, feature envy<br>
-            • Domain methods: focus on intent, not syntax<br>
-            • Form objects still valid for multi-object coordination
-          </small>
           So Jorge explains how wrapping a single line in a service object can add distracting boilerplate code.
           <br><br>
           I think most people would agree with this simple example,
@@ -541,11 +510,6 @@ end</code></pre>
         </p>
 
         <p class="speaker-notes">
-          <small>
-            • Avoid "service", "call", "execute"<br>
-            • card.gild reads like prose<br>
-            • Write for humans, not computers
-          </small>
           This is another example of something Jorge mentions—they don't use the word "service" and they avoid method names like `call` or `execute`.
           <br><br>
           And when you compare `CardGildingService.call(card)` versus `card.gild`,
@@ -587,19 +551,13 @@ end</code></pre>
         </p>
 
         <p class="speaker-notes">
-          <small>
-            • Pattern folders group by tech, not meaning<br>
-            • Domain first: Card::, Report::, etc.<br>
-            • Namespace = domain, suffix = role<br>
-            • One place to look when debugging
-          </small>
-          This follows naturally from what we just talked about with semantic naming.
+          This follows naturally from what we just talked about with ubiquitous language.
           <br><br>
-          When you create folders by pattern—services, processors, resolvers—you're grouping code by what it does technically, not by what it means to the business.
+          When you create folders by role—services, detectors, processors—you're grouping code by what it does technically, not by what it means to the business.
           <br><br>
-          Instead, group by domain concept first. Everything about cards lives under Card::. Everything about reports lives under Report::. If you need a detector, it's Card::ActivitySpike::Detector. If you need a resolver, it's Report::QuestionResolver.
+          Instead, group by domain concept first. Everything about cards lives under Card::. Gilding logic goes in Card::Golden. Activity spike detection goes in Card::ActivitySpike::Detector.
           <br><br>
-          The suffix tells you the role. The namespace tells you the domain. When you're debugging reports, you look in one place: app/models/report/. Not across resolvers, filters, and services.
+          The namespace tells you the domain. The suffix tells you the role. When you're debugging cards, you look in one place: app/models/card/. Not scattered across services, detectors, and processors.
         </p>
       </div>
 
@@ -651,7 +609,7 @@ end</code></pre>
          ================================================================ -->
     <section class="slide slide--dark" id="faux-o">
       <div class="slide-inner">
-        <h2 class="slide-title">We don't need <code>app/services</code></h2>
+        <h2 class="slide-title">The <code>app/services</code> directory</h2>
 
         <ul class="takeaways">
           <li><strong>Rails already provides orchestration</strong> — controllers connect the domain to the web, jobs connect it to background processing</li>
@@ -660,13 +618,7 @@ end</code></pre>
         </ul>
 
         <p class="speaker-notes">
-          <small>
-            • Rails already has service objects: controllers + jobs<br>
-            • app/services = Faux-O (Sandi Metz)<br>
-            • DDD: objects encapsulate data + behavior<br>
-            • Tell objects what to do, let them figure out how
-          </small>
-          Jorge's point is that Rails already gives us the service objects we need.
+          Jorge's explains that Rails already gives us the service objects we need.
           Controllers orchestrate HTTP requests, jobs orchestrate background work.
           They're thin layers that delegate to the domain—that's what a service should be.
           <br><br>
@@ -732,11 +684,6 @@ end</code></pre>
         </div>
 
         <p class="speaker-notes">
-          <small>
-            • Controllers: domain ↔ web<br>
-            • Jobs: domain ↔ background<br>
-            • Already orchestrate—Rails handles ceremony
-          </small>
           So controllers connect our domain models with the external world.
           And jobs work the same way—they're a thin layer of orchestration for our domain logic.
           <br><br>
@@ -816,6 +763,7 @@ end</code></pre>
       redirect_to_session_magic_link identity.send_magic_link
     else
       signup = Signup.new(email_address: email_address)
+      
       if signup.valid?(:identity_creation)
         magic_link = signup.create_identity if Account.accepting_signups?
         redirect_to_session_magic_link magic_link
@@ -838,11 +786,6 @@ end</code></pre>
         </div>
 
         <p class="speaker-notes">
-          <small>
-            • Concerns + composition work together<br>
-            • Concern = clean API, hides complexity<br>
-            • Controllers use concerns (CardScoped) + form objects
-          </small>
           So, concerns and object composition actually work great together.
           <br><br>
           The concern gives you a natural API to work with—you don't have to know about the complexity that might be hidden in an underlying object.
@@ -868,7 +811,7 @@ end</code></pre>
          ================================================================ -->
     <section class="slide slide--gradient" id="takeaways">
       <div class="slide-inner">
-        <h2 class="slide-title">Key Takeaways</h2>
+        <h2 class="slide-title">Takeaways</h2>
 
         <ul class="takeaways">
           <li>Let the domain model take the center stage in your architecture.</li>
@@ -876,7 +819,7 @@ end</code></pre>
           <li>Write code using clear, natural and ubiquitous language.</li>
           <li>Minimize boilerplate and syntax to allow intent to be more directly accessible.</li>
           <li>Controllers and jobs orchestrate; they don't hold business logic.</li>
-          <li>Non-Controller / Job services are Faux OO, abdicating OO design principles.</li>
+          <li>app/services are Faux OO, abdicating from OO design principles.</li>
         </ul>
       </div>
 
