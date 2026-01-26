@@ -1,6 +1,34 @@
 // Minimal keyboard navigation for slides
 // Works with semantic IDs - no numbered slides required
 
+// Screen Wake Lock to prevent auto-lock on mobile devices
+let wakeLock = null
+
+async function requestWakeLock() {
+  if ('wakeLock' in navigator) {
+    try {
+      wakeLock = await navigator.wakeLock.request('screen')
+      console.log('Wake Lock active - screen will stay on')
+
+      wakeLock.addEventListener('release', () => {
+        console.log('Wake Lock released')
+      })
+    } catch (err) {
+      console.log('Wake Lock request failed:', err.message)
+    }
+  }
+}
+
+// Re-acquire wake lock when page becomes visible again
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') {
+    requestWakeLock()
+  }
+})
+
+// Request wake lock on page load
+requestWakeLock()
+
 document.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowRight') {
     navigate(1)
