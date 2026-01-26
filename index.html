@@ -61,7 +61,7 @@
           <br><br>
           37signals design preferences aren't by any means secret and some of you might have
           seen Jorge Manrubia's Fizzy tour video recently. If you've seen it, most of this presentation will be familiar to you
-          but I hope that I can still contribute some value by answering questions and provide different perspectives.
+          but I hope that I can still contribute some value by answering questions and provide some different perspectives.
           <br><br>
           I could spend hours talking about code design so I've narrowed today's topic down to 37signals' take on domain driven design.
           This is mostly what Jorge's video is about.
@@ -110,9 +110,9 @@
         </div>
 
         <p class="speaker-notes">
-          Domain-Driven Design. Let's do a very quick recap of what it's about.
+          Let's do a very quick recap of what Domain-Driven Design is about.
           <br><br>
-          DDD comes down to three core ideas: rich domain models, ubiquitous language, and a domain centric design.
+          It comes down to three core ideas: rich domain models, ubiquitous language, and a domain centric design.
           <br><br>
           In the next slides I'll get to some examples of what this meant in practice at 37signals.
         </p>
@@ -560,7 +560,7 @@ end</code></pre>
           <br><br>
           Instead, group by domain concept first. Everything about cards lives under Card:: namespace. Gilding logic goes in Card::Golden. Activity spike detection goes in Card::ActivitySpike::Detector.
           <br><br>
-          The namespace tells you the domain. The suffix tells you the role. That way, domain logic isn't scattered across different folders but stay together.
+          The namespace tells you the domain. Suffix cann distinguish roles when neccessary. That way, domain logic isn't scattered across different folders but stay together.
         </p>
       </div>
 
@@ -626,7 +626,7 @@ end</code></pre>
           They're thin layers that delegate to the domain—that's what a service should be.
           <br><br>
           When we add an app/services folder, we're often doing something different.
-          We're pulling logic out of domain objects and putting it in procedures.
+          We're pulling logic out of domain objects, putting it into procedures.
           Sandi Metz calls this "Faux-O"—it looks object-oriented because we have classes,
           but we've lost the benefits of Object Oriented Design. Objects become data bags and behavior becomes scattered.
           <br><br>
@@ -821,7 +821,7 @@ end</code></pre>
           <li>Write code using clear, natural and ubiquitous language.</li>
           <li>Minimize boilerplate and syntax to allow intent to be more directly accessible.</li>
           <li>Controllers, Jobs, Mailers etc orchestrate; they don't hold business logic.</li>
-          <li>app/services are Faux OO, abdicating from OO design principles.</li>
+          <li>app/services are Faux-O, abdicating from OO design principles.</li>
         </ul>
       </div>
 
