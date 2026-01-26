@@ -1209,6 +1209,17 @@ body.training-mode .speaker-notes {
   box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
 }
 
+/* Quick reference bullet points in speaker notes */
+body.training-mode .speaker-notes small {
+  display: block;
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px dashed var(--tt-grey-64);
+  font-size: 0.9em;
+  line-height: 1.8;
+  text-align: left;
+}
+
 /* =============================================================================
    MOBILE RESPONSIVE - SPEAKER NOTES
    ============================================================================= */
