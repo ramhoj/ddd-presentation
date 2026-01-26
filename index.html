@@ -60,11 +60,11 @@
           that I picked up.
           <br><br>
           37signals design preferences aren't by any means secret and some of you might have
-          seen Jorge Manrubia's Fizzy tour video recently.
+          seen Jorge Manrubia's Fizzy tour video recently. If you've seen it, most of this presentation will be familiar to you
+          but I hope that I can still contribute some value by answering questions and provide different perspectives.
           <br><br>
           I could spend hours talking about code design so I've narrowed today's topic down to 37signals' take on domain driven design.
-          This is mostly what Jorge's video is about. If you've seen it, most of this presentation will be familiar to you
-          but I hope that I can still contribute some value by answering questions and provide different perspectives.
+          This is mostly what Jorge's video is about.
           <br><br>
           The ideas I'm sharing here were dogma at 37signals and I've learned to appreciate a lot of them. That said,
           I understand that they only represent one company's way of writing Rails applications and
@@ -552,13 +552,15 @@ end</code></pre>
         </p>
 
         <p class="speaker-notes">
+          Organize by domain, not by role
+          <br><br>
           This follows naturally from what we just talked about with ubiquitous language.
           <br><br>
           When you create folders by role—services, detectors, processors—you're grouping code by what it does technically, not by what it means to the business.
           <br><br>
-          Instead, group by domain concept first. Everything about cards lives under Card::. Gilding logic goes in Card::Golden. Activity spike detection goes in Card::ActivitySpike::Detector.
+          Instead, group by domain concept first. Everything about cards lives under Card:: namespace. Gilding logic goes in Card::Golden. Activity spike detection goes in Card::ActivitySpike::Detector.
           <br><br>
-          The namespace tells you the domain. The suffix tells you the role. What way, domain logic isn't scattered across different folders but stay together.
+          The namespace tells you the domain. The suffix tells you the role. That way, domain logic isn't scattered across different folders but stay together.
         </p>
       </div>
 
@@ -629,9 +631,7 @@ end</code></pre>
           but we've lost the benefits of Object Oriented Design. Objects become data bags and behavior becomes scattered.
           <br><br>
           DDD is the antidote. It's about building a coherent domain where objects
-          encapsulate both data and behavior. When you say card.gild, you're sending a message.
-          The card knows how to gild itself. That's the essence of object-oriented design—
-          you don't pull data out and operate on it, you tell objects what to do and let them figure out how.
+          encapsulate both data and behavior.
         </p>
       </div>
 
@@ -685,8 +685,8 @@ end</code></pre>
         </div>
 
         <p class="speaker-notes">
-          So controllers connect our domain models with the external world.
-          And jobs work the same way—they're a thin layer of orchestration for our domain logic.
+          So Controllers connect our domain models with the external world.
+          And Jobs work the same way—they're a thin layer of orchestration for our domain logic.
           <br><br>
           Jorge makes this point that controllers and jobs are already doing what service objects do. They orchestrate.
           <br><br>
