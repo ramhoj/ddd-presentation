@@ -1,6 +1,6 @@
 # Code Design Presentation
 
-A simple, maintainable HTML/CSS presentation about domain-driven code design, based on lessons from 37signals.
+A simple, maintainable HTML/CSS presentation about domain-driven code design, based on lessons from 37signals. Hosted at https://ramhoj.github.io/ddd-presentation.
 
 ## Usage
 
